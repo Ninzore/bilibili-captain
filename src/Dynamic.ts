@@ -2,7 +2,7 @@ import fs, { ReadStream } from "fs-extra";
 import FormData from "form-data";
 import querystring from "querystring";
 import {BiliCredential} from "./BiliCredential";
-import {UploadBfsResponse, CreateResponse, RemoveResponse} from "./types/Dynamic";
+import {UploadBfsResponse, CreateResponse, RepostResponse, CommonResponse} from "./types/Dynamic";
 import {Request} from "./Request";
 
 export class Dynamic {
@@ -18,12 +18,13 @@ export class Dynamic {
      * @param file 
      * @returns 
      */
-    async uploadBfs(file: Buffer | ReadStream): Promise<UploadBfsResponse> {
+    async uploadBfs(file: string | Buffer | ReadStream): Promise<UploadBfsResponse> {
         let form = new FormData();
         form.append("biz", "dyn");
         form.append("file_up", file);
         form.append("csrf", this.credential.csfr);
-    
+        
+        if (typeof file == "string") file = fs.createReadStream(file);
         return Request.post(
             "https://api.bilibili.com/x/dynamic/feed/draw/upload_bfs",
             form,
@@ -40,7 +41,6 @@ export class Dynamic {
             let pictures = [];
 
             for (let img of images) {
-                if (typeof img == "string") img = fs.createReadStream(img);
                 let res =  await this.uploadBfs(img);
                 pictures.push({
                     img_src: res.data.image_url,
@@ -92,11 +92,53 @@ export class Dynamic {
         );
     }
 
-    async remove(dynamic_id: string): Promise<RemoveResponse> {
+    async remove(dynamic_id: string): Promise<CommonResponse> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/rm_dynamic",
             querystring.stringify({
                 dynamic_id: dynamic_id,
+                csrf: this.credential.csfr,
+                csrf_token: this.credential.csfr
+            }),
+            this.credential
+        )
+    }
+
+    async repost(dynamic_id: string, content = "转发动态"): Promise<RepostResponse> {
+        return Request.post(
+            "https://api.vc.bilibili.com/dynamic_repost/v1/dynamic_repost/repost",
+            querystring.stringify({
+                dynamic_id: dynamic_id,
+                content: content,
+                extension: '{"emoji_type":1}',
+                at_uids: "",
+                ctrl: [],
+                csrf: this.credential.csfr,
+                csrf_token: this.credential.csfr
+            }),
+            this.credential
+        )
+    }
+
+    async thumb(dynamic_id: string): Promise<CommonResponse> {
+        return Request.post(
+            "https://api.vc.bilibili.com/dynamic_like/v1/dynamic_like/thumb",
+            querystring.stringify({
+                dynamic_id: dynamic_id,
+                up: 1,
+                csrf: this.credential.csfr,
+                csrf_token: this.credential.csfr
+            }),
+            this.credential
+        )
+    }
+
+    async unthumb(dynamic_id: string): Promise<CommonResponse> {
+        return Request.post(
+            "https://api.vc.bilibili.com/dynamic_like/v1/dynamic_like/thumb",
+            querystring.stringify({
+                dynamic_id: dynamic_id,
+                up: 2,
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr
             }),

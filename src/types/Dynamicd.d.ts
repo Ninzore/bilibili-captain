@@ -23,7 +23,18 @@ export interface CreateResponse {
     };
 }
 
-export interface RemoveResponse {
+export interface RepostResponse {
+    code:    number;
+    msg:     string;
+    message: string;
+    data: {
+        result: number;
+        errmsg: string;
+        _gt_:   number;
+    };
+}
+
+export interface CommonResponse {
     code:    number;
     msg:     string;
     message: string;

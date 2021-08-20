@@ -20,11 +20,7 @@ export class Request {
             method: method,
             headers: headers,
             params: params,
-            data: data,
-            proxy: {
-                host: "127.0.0.1",
-                port: 8888
-            }
+            data: data
         }).then(res => {return res.data});
     }
 
