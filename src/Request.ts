@@ -31,4 +31,8 @@ export class Request {
     static async post(url: string, data: string | Object | FormData, credential?: BiliCredential): Promise<any> {
         return this.request(url, "POST", {}, data, credential);
     }
+
+    static async head(url: string, params = {}, credential?: BiliCredential): Promise<any> {
+        return this.request(url, "HEAD", {}, params, credential);
+    }
 }
