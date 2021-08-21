@@ -13,9 +13,8 @@ export class Dynamic {
     }
 
     /**
-     * 
-     * @param category 
-     * @param file 
+     * 上传文件
+     * @param file 上传文件
      * @returns 
      */
     async uploadBfs(file: string | Buffer | ReadStream): Promise<UploadBfsResponse> {
@@ -36,6 +35,12 @@ export class Dynamic {
         });
     }
     
+    /**
+     * 发送动态
+     * @param text 动态文字
+     * @param images 动态图片
+     * @returns 
+     */
     async create(text: string, images?: Array<string | Buffer | ReadStream>): Promise<CreateResponse> {
         if (images) {
             let pictures = [];
@@ -92,6 +97,11 @@ export class Dynamic {
         );
     }
 
+    /**
+     * 删除动态
+     * @param dynamic_id 动态id
+     * @returns 
+     */
     async remove(dynamic_id: string): Promise<CommonResponse> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/rm_dynamic",
@@ -104,12 +114,18 @@ export class Dynamic {
         )
     }
 
-    async repost(dynamic_id: string, content = "转发动态"): Promise<RepostResponse> {
+    /**
+     * 转发动态
+     * @param dynamic_id 动态id
+     * @param text 转发文字
+     * @returns 
+     */
+    async repost(dynamic_id: string, text = "转发动态"): Promise<RepostResponse> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_repost/v1/dynamic_repost/repost",
             querystring.stringify({
                 dynamic_id: dynamic_id,
-                content: content,
+                content: text,
                 extension: '{"emoji_type":1}',
                 at_uids: "",
                 ctrl: [],
@@ -120,25 +136,18 @@ export class Dynamic {
         )
     }
 
-    async thumb(dynamic_id: string): Promise<CommonResponse> {
+    /**
+     * 点赞动态
+     * @param dynamic_id 动态id
+     * @param action 点赞或取消点赞
+     * @returns 
+     */
+    async thumb(dynamic_id: string, action: boolean): Promise<CommonResponse> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_like/v1/dynamic_like/thumb",
             querystring.stringify({
                 dynamic_id: dynamic_id,
-                up: 1,
-                csrf: this.credential.csfr,
-                csrf_token: this.credential.csfr
-            }),
-            this.credential
-        )
-    }
-
-    async unthumb(dynamic_id: string): Promise<CommonResponse> {
-        return Request.post(
-            "https://api.vc.bilibili.com/dynamic_like/v1/dynamic_like/thumb",
-            querystring.stringify({
-                dynamic_id: dynamic_id,
-                up: 2,
+                up: action ? 1 : 2,
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr
             }),
