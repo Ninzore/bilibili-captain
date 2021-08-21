@@ -21,7 +21,10 @@ export class Request {
             headers: headers,
             params: params,
             data: data
-        }).then(res => {return res.data});
+        }).then(res => {
+            if (res.data.code !== 0) throw res.data;
+            else return res.data;
+        });
     }
 
     static async get(url: string, params: Object = {}, credential?: BiliCredential): Promise<any> {
