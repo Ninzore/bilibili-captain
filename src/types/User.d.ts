@@ -1,3 +1,115 @@
+export interface User {
+    mid:              number;
+    name:             string;
+    sex:              string;
+    face:             string;
+    sign:             string;
+    rank:             number;
+    level:            number;
+    jointime:         number;
+    moral:            number;
+    silence:          number;
+    coins:            number;
+    fans_badge:       boolean;
+    fans_medal:       FansMedal;
+    official:         Official;
+    vip:              Vip;
+    pendant:          Pendant;
+    nameplate:        Nameplate;
+    user_honour_info: UserHonourInfo;
+    is_followed:      boolean;
+    top_photo:        string;
+    theme:            Theme;
+    sys_notice:       SysNotice;
+    live_room:        LiveRoom;
+    birthday:         string;
+    school:           School;
+    profession:       Profession;
+    tags:             null;
+    series:           Series;
+}
+
+interface FansMedal {
+    show:  boolean;
+    wear:  boolean;
+    medal: Medal;
+}
+
+interface Medal {
+    uid:                number;
+    target_id:          number;
+    medal_id:           number;
+    level:              number;
+    medal_name:         string;
+    medal_color:        number;
+    intimacy:           number;
+    next_intimacy:      number;
+    day_limit:          number;
+    today_feed:         number;
+    medal_color_start:  number;
+    medal_color_end:    number;
+    medal_color_border: number;
+    is_lighted:         number;
+    light_status:       number;
+    wearing_status:     number;
+    score:              number;
+}
+
+interface LiveRoom {
+    roomStatus:     number;
+    liveStatus:     number;
+    url:            string;
+    title:          string;
+    cover:          string;
+    online:         number;
+    roomid:         number;
+    roundStatus:    number;
+    broadcast_type: number;
+}
+
+interface Official {
+    role:  number;
+    title: string;
+    desc:  string;
+    type:  number;
+}
+
+interface School {
+    name: string;
+}
+
+interface Profession {
+    name: string;
+}
+
+interface Series {
+    user_upgrade_status: number;
+    show_upgrade_window: boolean;
+}
+
+interface Theme {}
+
+interface SysNotice {}
+
+interface UserHonourInfo {
+    mid:    number;
+    colour: null;
+    tags:   null;
+}
+
+interface Vip {
+    type:                 number;
+    status:               number;
+    due_date:             number;
+    vip_pay_type:         number;
+    theme_type:           number;
+    label:                Label;
+    avatar_subscript:     number;
+    nickname_color:       string;
+    role:                 number;
+    avatar_subscript_url: string;
+}
+
 export interface Member {
     mid:             string;
     uname:           string;
