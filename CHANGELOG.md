@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.0.6] - 2021-08-23
+### Feat
+* Feat: 发布和删除回复
+* Change: oid类型变为string
+
 ## [0.0.5] - 2021-08-21
 ### Feat
 * Doc: 添加doc (2fa1d1b023013ad7fe105098e834c8740a9c0a22)

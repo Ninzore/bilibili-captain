@@ -13,6 +13,31 @@ declare const enum SortBy {
     replyNum
 }
 
+export interface AddResponse {
+    code:    number;
+    message: string;
+    ttl:     number;
+    data:    AddData;
+}
+
+interface AddData {
+    success_action:  number;
+    success_toast:   string;
+    need_captcha:    boolean;
+    need_captcha_v2: boolean;
+    url:             string;
+    url_v2:          string;
+    rpid:            number;
+    rpid_str:        string;
+    dialog:          number;
+    dialog_str:      string;
+    root:            number;
+    root_str:        string;
+    parent:          number;
+    parent_str:      string;
+    reply:           Reply;
+}
+
 export interface ListResponse {
     page:         Page;
     config:       Config;
@@ -145,7 +170,7 @@ export interface CommonResponse {
     code:    number;
     message: string;
     ttl:     number;
-    data:    Data;
+    data?:    Data;
 }
 
 interface Data {
