@@ -154,4 +154,26 @@ export class Dynamic {
             this.credential
         )
     }
+
+    /**
+     * 分享到动态
+     * @param rid 视频=av，专栏=cv，音频=au，番剧=eq
+     * @param content 来说说分享的理由？|´・ω・)ノ
+     * @param type 视频=8，专栏=64，音频=256，自定义=2048，番剧=4097
+     * @param up_uid up主uid（可以为0）
+     * @returns 
+     */
+    async share(rid: string, content: string, type: 8 | 64 | 256 | 2048 | 4097, up_uid: string = "0"): Promise<CreateResponse> {
+        return Request.post(
+            "https://api.vc.bilibili.com/dynamic_repost/v1/dynamic_repost/share",
+            querystring.stringify({
+                rid,
+                type,
+                content,
+                uid: up_uid,
+                csrf_token: this.credential.csfr,
+            }),
+            this.credential
+        )
+    }
 }
