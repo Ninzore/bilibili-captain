@@ -1,15 +1,24 @@
 # Changelog
 
+## [0.0.7] - 2021-08-24
+### Feat
+* 分享内容到动态
+* 置顶评论
+### Change
+* Ctype -> Btype
+
 ## [0.0.6] - 2021-08-23
 ### Feat
-* Feat: 发布和删除回复
-* Change: oid类型变为string
+* 发布和删除回复
+### Change
+* oid类型变为string
 
 ## [0.0.5] - 2021-08-21
 ### Feat
-* Doc: 添加doc (2fa1d1b023013ad7fe105098e834c8740a9c0a22)
 * 添加HEAD方法 (36e06d0d246623a9504c2fcd5544fb2bc48c8e07)
 * 评论区列表，点赞，踩 (af7d8f0fd8b3f46df76ec31880ee46a9e0abb7d8)
+### Doc
+* 添加doc (2fa1d1b023013ad7fe105098e834c8740a9c0a22)
 
 ### Change
 * Throw when code != 0 (c2344e82748e893c4962916d25fa6a3b37f53acc)
