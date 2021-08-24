@@ -1,7 +1,8 @@
 import querystring from "querystring";
 import {BiliCredential} from "./BiliCredential";
 import {Request} from "./Request";
-import {AddResponse, Ctype, SortBy, ListResponse, CommonResponse} from "./types/Reply";
+import {Btype} from "./types/Common";
+import {AddResponse, SortBy, ListResponse, CommonResponse} from "./types/Reply";
 
 export class Comment {
     private credential: BiliCredential;
@@ -17,7 +18,7 @@ export class Comment {
      * @param type 评论区类型
      * @returns 
      */
-     async add(oid: string, message: string, type: Ctype, root?: number, parent?: number): Promise<AddResponse> {
+     async add(oid: string, message: string, type: Btype, root?: number, parent?: number): Promise<AddResponse> {
         let payload = {
             oid,
             message,
@@ -48,7 +49,7 @@ export class Comment {
      * @param type 评论区类型
      * @returns 
      */
-     async delete(oid: string, reply_id: string, type: Ctype): Promise<CommonResponse> {
+     async delete(oid: string, reply_id: string, type: Btype): Promise<CommonResponse> {
         return Request.post(
             "https://api.bilibili.com/x/v2/reply/del",
             querystring.stringify({
@@ -63,13 +64,35 @@ export class Comment {
     }
 
     /**
+     * 置顶一条回复
+     * @param oid 评论区id
+     * @param reply_id 回复id
+     * @param type 评论区类型
+     * @returns 
+     */
+     async top(oid: string, reply_id: string, type: Btype, action: true): Promise<CommonResponse> {
+        return Request.post(
+            "https://api.bilibili.com/x/v2/reply/top",
+            querystring.stringify({
+                oid,
+                rpid: reply_id,
+                type,
+                action: action ? 1 : 0,
+                jsonp: "jsonp",
+                csrf: this.credential.csfr,
+            }),
+            this.credential
+        )
+    }
+
+    /**
      * 列出评论区
      * @param oid 评论区id
      * @param type 评论区类型
      * @param page_num 评论区页数
      * @returns 
      */
-     async list(oid: string, type: Ctype, page_num = 0, sort = SortBy.like): Promise<ListResponse> {
+     async list(oid: string, type: Btype, page_num = 0, sort = SortBy.like): Promise<ListResponse> {
         return Request.get(
             "https://api.bilibili.com/x/v2/reply",
             {
@@ -91,7 +114,7 @@ export class Comment {
      * @param type 	评论区类型
      * @returns 
      */
-     async thumb(oid: string, rpid: string, type: Ctype, action = true): Promise<CommonResponse> {
+     async thumb(oid: string, rpid: string, type: Btype, action = true): Promise<CommonResponse> {
         return Request.get(
             "https://api.bilibili.com/x/v2/reply/action",
             {
@@ -113,7 +136,7 @@ export class Comment {
      * @param type 评论区类型
      * @returns 
      */
-    async hate(oid: string, rpid: string, type: Ctype, action = true): Promise<CommonResponse> {
+    async hate(oid: string, rpid: string, type: Btype, action = true): Promise<CommonResponse> {
         return Request.get(
             "http://api.bilibili.com/x/v2/reply/hate",
             {
