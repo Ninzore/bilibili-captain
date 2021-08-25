@@ -4,6 +4,7 @@ import querystring from "querystring";
 import {BiliCredential} from "./BiliCredential";
 import {UploadBfsResponse, CreateResponse, RepostResponse, CommonResponse} from "./types/Dynamic";
 import {Request} from "./Request";
+import {Common} from "./Common";
 
 export class Dynamic {
     private credential: BiliCredential;
@@ -20,10 +21,11 @@ export class Dynamic {
     async uploadBfs(file: string | Buffer | ReadStream): Promise<UploadBfsResponse> {
         let form = new FormData();
         form.append("biz", "dyn");
-        form.append("file_up", file);
+        form.append("category", "daily");
         form.append("csrf", this.credential.csfr);
-        
         if (typeof file == "string") file = fs.createReadStream(file);
+        form.append("file_up", file);
+
         return Request.post(
             "https://api.bilibili.com/x/dynamic/feed/draw/upload_bfs",
             form,
