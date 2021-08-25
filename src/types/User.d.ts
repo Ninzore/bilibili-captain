@@ -1,4 +1,4 @@
-export interface User {
+export interface UserInfo {
     mid:              number;
     name:             string;
     sex:              string;
