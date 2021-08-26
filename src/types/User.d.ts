@@ -204,3 +204,38 @@ export interface ContentMember {
     official_verify: OfficialVerify;
     vip:             ContentMemberVip;
 }
+
+export interface UserInfoFromSearch {
+    title:           string;
+    cover:           string;
+    uri:             string;
+    param:           string;
+    goto:            string;
+    sign:            string;
+    fans:            number;
+    level:           number;
+    official_verify: OfficialVerify;
+    vip:             Vip;
+    av_items:        AVItem[];
+    is_up:           boolean;
+    live_uri:        string;
+    archives:        number;
+    roomid:          number;
+    mid:             number;
+    live_link:       string;
+    relation:        Relation;
+}
+
+interface AVItem {
+    position:    number;
+    title:       string;
+    cover:       string;
+    uri:         string;
+    param:       string;
+    goto:        string;
+    play:        number;
+    danmaku:     number;
+    ctime:       number;
+    ctime_label: string;
+    duration:    string;
+}
