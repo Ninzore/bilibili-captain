@@ -44,6 +44,12 @@ export class Dynamic {
      * @returns 
      */
     async create(text: string, images?: Array<string | Buffer | ReadStream>): Promise<CreateResponse> {
+        let at_uids: string[] = [];
+        let ctrl: object[] = [];
+        if (text.indexOf("@") != -1) ({at_uids, ctrl} = await Common.parseAt(text));
+        let at_uids_str = JSON.stringify(at_uids);
+        let ctrl_str = JSON.stringify(ctrl);
+
         if (images) {
             let pictures = [];
 
@@ -72,8 +78,8 @@ export class Dynamic {
                     up_choose_comment: 0,
                     up_close_comment: 0,
                     extension: '{"emoji_type":1,"from":{"emoji_type":1},"flag_cfg":{}}',
-                    at_uids: "",
-                    at_control: '[]',
+                    at_uids: at_uids_str,
+                    at_control: ctrl_str,
                     csrf: this.credential.csfr,
                     csrf_token: this.credential.csfr
                 }),
@@ -88,8 +94,8 @@ export class Dynamic {
                 rid: 0,
                 content: text,
                 extension: '{"emoji_type":1,"from":{"emoji_type":1},"flag_cfg":{}}',
-                at_uids: "",
-                ctrl: [],
+                at_uids: at_uids_str,
+                ctrl: ctrl_str,
                 up_choose_comment: 0,
                 up_close_comment: 0,
                 csrf: this.credential.csfr,

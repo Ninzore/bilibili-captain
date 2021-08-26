@@ -4,3 +4,15 @@ export type Btype =
 11 | 12 | 13 | 14 | 15 |
 16 | 17 |18 | 19 | 20 |
 21 | 22 | 33
+
+export interface ParseAt {
+    at_uids: string[];
+    ctrl:    DynamicCtrl[];
+}
+
+export interface DynamicCtrl {
+    location: number;
+    type:     number;
+    length:   number;
+    data:     string;
+}
