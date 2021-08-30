@@ -2,7 +2,7 @@ import fs, { ReadStream } from "fs-extra";
 import FormData from "form-data";
 import querystring from "querystring";
 import {BiliCredential} from "./BiliCredential";
-import {UploadBfsResponse, CreateResponse, RepostResponse, CommonResponse} from "./types/Dynamic";
+import {UploadBfsResponse, CreateResponse, RepostResponse, CommonResponse, DynamiDetail} from "./types/Dynamic";
 import {Request} from "./Request";
 import {Common} from "./Common";
 
@@ -11,6 +11,18 @@ export class Dynamic {
 
     constructor(credential: BiliCredential) {
         this.credential = credential;
+    }
+
+    /**
+     * 
+     * @param dynamic_id 动态id
+     * @returns 
+     */
+     static async detail(dynamic_id: string): Promise<DynamiDetail> {
+        return Request.get(
+            "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail",
+            {dynamic_id}
+        );
     }
 
     /**

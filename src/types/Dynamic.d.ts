@@ -1,3 +1,5 @@
+import {UserProfile} from "./User";
+
 export interface UploadBfsResponse {
     code:    number;
     message: string;
@@ -9,10 +11,7 @@ export interface UploadBfsResponse {
     };
 }
 
-export interface CreateResponse {
-    code:    number;
-    msg:     string;
-    message: string;
+export interface CreateResponse extends CommonResponse {
     data: {
         result:         number;
         errmsg:         string;
@@ -23,10 +22,7 @@ export interface CreateResponse {
     };
 }
 
-export interface RepostResponse {
-    code:    number;
-    msg:     string;
-    message: string;
+export interface RepostResponse extends CommonResponse {
     data: {
         result: number;
         errmsg: string;
@@ -41,4 +37,47 @@ export interface CommonResponse {
     data:   {
         _gt_: number;
     };
+}
+export interface DynamiDetail extends CommonResponse {
+    data:    DynamicData;
+}
+
+export interface DynamicData {
+    card:   DataCard;
+    result: number;
+    _gt_:   number;
+}
+
+export interface DataCard {
+    desc:        Desc;
+    card:        string;
+    extend_json: string;
+    display:     Display;
+}
+
+export interface Desc {
+    uid:            number;
+    type:           number;
+    rid:            number;
+    acl:            number;
+    view:           number;
+    repost:         number;
+    comment:        number;
+    like:           number;
+    is_liked:       number;
+    dynamic_id:     number;
+    timestamp:      number;
+    pre_dy_id:      number;
+    orig_dy_id:     number;
+    orig_type:      number;
+    user_profile:   UserProfile;
+    uid_type:       number;
+    stype:          number;
+    r_type:         number;
+    inner_id:       number;
+    status:         number;
+    dynamic_id_str: string;
+    pre_dy_id_str:  string;
+    orig_dy_id_str: string;
+    rid_str:        string;
 }

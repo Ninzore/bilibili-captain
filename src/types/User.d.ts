@@ -101,7 +101,7 @@ interface Vip {
     type:                 number;
     status:               number;
     due_date:             number;
-    vip_pay_type:         number;
+    vip_pay_type?:        number;
     theme_type:           number;
     label:                Label;
     avatar_subscript:     number;
@@ -238,4 +238,44 @@ interface AVItem {
     ctime:       number;
     ctime_label: string;
     duration:    string;
+}
+
+interface Relation {
+    status: number;
+}
+
+export interface UserProfile {
+    info:       Info;
+    card:       UserProfileCard;
+    vip:        Vip;
+    pendant:    Pendant;
+    rank:       string;
+    sign:       string;
+    level_info: LevelInfo2;
+}
+
+interface UserProfileCard {
+    official_verify: OfficialVerify;
+}
+
+
+interface Info {
+    uid:   number;
+    uname: string;
+    face:  string;
+}
+
+interface LevelInfo2 {
+    current_level: number;
+}
+
+
+interface Display {
+    relation: Relation2;
+}
+
+interface Relation2 {
+    status:      number;
+    is_follow:   number;
+    is_followed: number;
 }
