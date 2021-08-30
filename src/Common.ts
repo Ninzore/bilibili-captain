@@ -26,6 +26,6 @@ export class Common {
                 data: mid
             });
         }
-        return {at_uids, ctrl}
+        return {at_uids, ctrl};
     }
 }

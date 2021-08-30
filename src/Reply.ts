@@ -60,7 +60,7 @@ export class Comment {
                 csrf: this.credential.csfr,
             }),
             this.credential
-        )
+        );
     }
 
     /**
@@ -82,7 +82,7 @@ export class Comment {
                 csrf: this.credential.csfr,
             }),
             this.credential
-        )
+        );
     }
 
     /**

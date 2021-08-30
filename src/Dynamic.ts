@@ -119,7 +119,7 @@ export class Dynamic {
                 csrf_token: this.credential.csfr
             }),
             this.credential
-        )
+        );
     }
 
     /**
@@ -141,7 +141,7 @@ export class Dynamic {
                 csrf_token: this.credential.csfr
             }),
             this.credential
-        )
+        );
     }
 
     /**
@@ -160,7 +160,7 @@ export class Dynamic {
                 csrf_token: this.credential.csfr
             }),
             this.credential
-        )
+        );
     }
 
     /**
@@ -182,6 +182,6 @@ export class Dynamic {
                 csrf_token: this.credential.csfr,
             }),
             this.credential
-        )
+        );
     }
 }
