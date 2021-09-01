@@ -16,3 +16,8 @@ export interface DynamicCtrl {
     length:   number;
     data:     string;
 }
+
+export interface ResInfo {
+    oid:  string;
+    btype: Btype;
+}
