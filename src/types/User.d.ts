@@ -202,7 +202,7 @@ export interface ContentMember {
     pendant:         Pendant;
     nameplate:       Nameplate;
     official_verify: OfficialVerify;
-    vip:             ContentMemberVip;
+    vip:             Vip2;
 }
 
 export interface UserInfoFromSearch {
@@ -270,12 +270,18 @@ interface LevelInfo2 {
 }
 
 
-interface Display {
-    relation: Relation2;
+export interface Display {
+    relation:         Relation2;
+    add_on_card_info: AddOnCardInfo;
 }
 
 interface Relation2 {
     status:      number;
     is_follow:   number;
     is_followed: number;
+}
+
+export interface AddOnCardInfo {
+    add_on_card_show_type: number;
+    vote_card:             string;
 }

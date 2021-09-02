@@ -1,4 +1,4 @@
-import {UserProfile} from "./User";
+import {UserProfile, Display} from "./User";
 
 export interface UploadBfsResponse {
     code:    number;
@@ -48,14 +48,14 @@ export interface DynamicData {
     _gt_:   number;
 }
 
-export interface DataCard {
+interface DataCard {
     desc:        Desc;
     card:        string;
     extend_json: string;
     display:     Display;
 }
 
-export interface Desc {
+interface Desc {
     uid:            number;
     type:           number;
     rid:            number;

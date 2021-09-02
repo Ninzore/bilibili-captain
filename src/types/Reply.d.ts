@@ -107,7 +107,7 @@ export interface Reply {
     parent_str:    string;
     like:          number;
     action:        number;
-    member:        User;
+    member:        Member;
     content:       Content;
     replies:       Reply[];
     assist:        number;
