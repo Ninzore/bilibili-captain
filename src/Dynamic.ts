@@ -1,6 +1,7 @@
-import fs, { ReadStream } from "fs-extra";
-import FormData from "form-data";
-import querystring from "querystring";
+import * as fs from "fs-extra";
+import * as FormData from "form-data";
+import * as querystring from "query-string";
+import { ReadStream } from "fs-extra"
 import {BiliCredential} from "./BiliCredential";
 import {UploadBfsResponse, CreateResponse, RepostResponse, CommonResponse, DynamiDetail} from "./types/Dynamic";
 import {Request} from "./Request";

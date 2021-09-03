@@ -1,5 +1,5 @@
 import axios, { Method } from "axios";
-import FormData from "form-data";
+import * as FormData from "form-data";
 import {BiliCredential} from "./BiliCredential";
 
 export class Request {

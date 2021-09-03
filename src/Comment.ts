@@ -1,4 +1,4 @@
-import querystring from "querystring";
+import * as querystring from "query-string";
 import {BiliCredential} from "./BiliCredential";
 import {Request} from "./Request";
 import {Btype} from "./types/Common";
@@ -103,7 +103,8 @@ export class Comment {
             },
             this.credential
         ).then(res => {
-            return res;
+            console.log(Object.keys(res))
+            return res.data.data;
         });
     }
 
