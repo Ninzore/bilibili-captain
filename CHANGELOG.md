@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.1.3] - 2021-09-05
+### Feat
+* 新增Video类以及type
+
 ## [0.1.2] - 2021-09-03
 ### Chore
 * change configuration files
