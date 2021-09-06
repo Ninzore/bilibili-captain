@@ -6,14 +6,7 @@ declare const enum SortBy {
     replyNum
 }
 
-export interface AddResponse {
-    code:    number;
-    message: string;
-    ttl:     number;
-    data:    AddData;
-}
-
-interface AddData {
+interface AddResponse {
     success_action:  number;
     success_toast:   string;
     need_captcha:    boolean;

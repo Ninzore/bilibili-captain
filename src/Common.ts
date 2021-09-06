@@ -66,7 +66,7 @@ export class Common {
             if (!dynamic_id) return info;
             info.oid = dynamic_id[0];
             const dynamic = await Dynamic.detail(dynamic_id[0]);
-            info.btype = dynamic.data.card.desc.r_type == 1 ? 17 : 11;
+            info.btype = dynamic.card.desc.r_type == 1 ? 17 : 11;
         }
         else {
             const oid = url.substring(6, url.length);

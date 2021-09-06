@@ -11,38 +11,22 @@ export interface UploadBfsResponse {
     };
 }
 
-export interface CreateResponse extends CommonResponse {
-    data: {
-        result:         number;
-        errmsg:         string;
-        dynamic_id:     number;
-        create_result:  number;
-        dynamic_id_str: string;
-        _gt_:           number;
-    };
+export interface CreateResponse {
+    result:         number;
+    errmsg:         string;
+    dynamic_id:     number;
+    create_result:  number;
+    dynamic_id_str: string;
+    _gt_:           number;
 }
 
-export interface RepostResponse extends CommonResponse {
-    data: {
-        result: number;
-        errmsg: string;
-        _gt_:   number;
-    };
+export interface RepostResponse {
+    result: number;
+    errmsg: string;
+    _gt_:   number;
 }
 
-export interface CommonResponse {
-    code:    number;
-    msg:     string;
-    message: string;
-    data:   {
-        _gt_: number;
-    };
-}
-export interface DynamiDetail extends CommonResponse {
-    data:    DynamicData;
-}
-
-export interface DynamicData {
+export interface DynamiDetail {
     card:   DataCard;
     result: number;
     _gt_:   number;

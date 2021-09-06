@@ -9,7 +9,10 @@ export class User {
      * @returns 
      */
     static async info(mid: number): Promise<UserInfo> {
-        return await Request.get("https://api.bilibili.com/x/space/acc/info", {mid});
+        return await Request.get(
+            "https://api.bilibili.com/x/space/acc/info", 
+            {mid}
+        ).then(res => {return res.data;});
     }
 
     /**

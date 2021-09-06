@@ -33,7 +33,7 @@ export class Comment {
             "https://api.bilibili.com/x/v2/reply/add",
             querystring.stringify(payload),
             this.credential
-        );
+        ).then(res => {return res;});
     }
 
     /**
@@ -62,7 +62,7 @@ export class Comment {
             "https://api.bilibili.com/x/v2/reply/add",
             querystring.stringify(payload),
             this.credential
-        );
+        ).then(res => {return res;});
     }
 
     /**
