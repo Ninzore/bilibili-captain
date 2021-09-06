@@ -4,6 +4,7 @@ import * as querystring from "query-string";
 import { ReadStream } from "fs-extra"
 import {BiliCredential} from "./BiliCredential";
 import {UploadBfsResponse, CreateResponse, RepostResponse, DynamiDetail} from "./types/Dynamic";
+import { baseResponse } from "./types/Common";
 import {Request} from "./Request";
 import {Common} from "./Common";
 
@@ -123,7 +124,7 @@ export class Dynamic {
      * @param dynamic_id 动态id
      * @returns 
      */
-    async remove(dynamic_id: string): Promise<number> {
+    async remove(dynamic_id: string): Promise<baseResponse> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/rm_dynamic",
             querystring.stringify({
@@ -163,7 +164,7 @@ export class Dynamic {
      * @param action 点赞或取消点赞
      * @returns 
      */
-    async thumb(dynamic_id: string, action: boolean): Promise<number> {
+    async thumb(dynamic_id: string, action: boolean): Promise<baseResponse> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_like/v1/dynamic_like/thumb",
             querystring.stringify({

@@ -18,6 +18,12 @@ export interface DynamicCtrl {
 }
 
 export interface ResInfo {
-    oid:  string;
+    oid:   string;
     btype: Btype;
+}
+
+export interface baseResponse {
+    code:    number;
+    message: string;
+    ttl:     number;
 }
