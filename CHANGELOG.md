@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.1.4] - 2021-09-06
+### Change
+* 简化部分return
+
 ## [0.1.3] - 2021-09-05
 ### Feat
 * 新增Video类以及type
