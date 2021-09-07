@@ -81,6 +81,24 @@ interface Stat {
     argue_msg:  string;
 }
 
+export interface StatResponse {
+    aid:        number;
+    bvid:       string;
+    view:       number;
+    danmaku:    number;
+    reply:      number;
+    favorite:   number;
+    coin:       number;
+    share:      number;
+    like:       number;
+    now_rank:   number;
+    his_rank:   number;
+    no_reprint: number;
+    copyright:  number;
+    argue_msg:  string;
+    evaluation: string;
+}
+
 interface Subtitle {
     allow_submit: boolean;
     list:         any[];
@@ -88,4 +106,11 @@ interface Subtitle {
 
 interface UserGarb {
     url_image_ani_cut: string;
+}
+
+export interface TripleResponse {
+    coin:     boolean;
+    fav:      boolean;
+    like:     boolean;
+    multiply: number;
 }
