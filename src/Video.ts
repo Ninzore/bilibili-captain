@@ -2,6 +2,7 @@ import * as querystring from "query-string";
 import {BiliCredential} from "./BiliCredential";
 import {Request} from "./Request";
 import { StatResponse, PageListReturn, VideoDetail, TripleResponse } from "./types/Video";
+import {Common} from "./Common";
 
 export class Video {
     private credential: BiliCredential;
@@ -127,11 +128,19 @@ export class Video {
      * @param bvid 
      * @returns 是否为未关注用户收藏
      */
-    async deal(add_media_ids?: number[], del_media_ids?: number[], bvid?: string): Promise<boolean> {
+    async deal(add_media_ids?: number[], del_media_ids?: number[], bvid?: string, avid?: string): Promise<boolean> {
+        let rid = "";
+        if (!avid) {
+            bvid = bvid || this.bvid;
+            if (!bvid) throw "需要提供bvid";
+            Common.avBvInterchange(bvid);
+        }
+        else rid = avid;
+        
         return Request.post(
             "https://api.bilibili.com/x/v3/fav/resource/deal",
             querystring.stringify({
-                rid: bvid,
+                rid,
                 type: 2,
                 add_media_ids: add_media_ids?.join(",") ?? "",
                 del_media_ids: del_media_ids?.join(",") ?? "",
