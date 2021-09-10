@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.9] - 2021-09-10
+### Change
+* Comment实例化时可以指定oid和type
+* Comment内方法入参顺序调整
+
 ## [0.1.8] - 2021-09-08
 ### Feat
 * av bv 号互转
