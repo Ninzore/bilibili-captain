@@ -7,7 +7,7 @@ import {AddResponse, SortBy, ListResponse, CommonResponse} from "./types/Comment
 export class Comment {
     private credential: BiliCredential;
 
-    constructor(credential: BiliCredential) {
+    constructor(credential: BiliCredential, public oid?: string, public type?: Btype) {
         this.credential = credential;
     }
 
@@ -18,7 +18,12 @@ export class Comment {
      * @param type 评论区类型
      * @returns 
      */
-    async add(oid: string, type: Btype, message: string): Promise<AddResponse> {
+    async add(message: string): Promise<AddResponse>;
+    async add(message: string, oid?: string, type?: Btype): Promise<AddResponse> {
+        oid = oid ?? this.oid;
+        type = type ?? this.type;
+        if (!oid || !type) throw "需要提供oid和type";
+        
         let payload = {
             oid,
             message,
@@ -35,7 +40,7 @@ export class Comment {
             this.credential
         ).then(res => {return res;});
     }
-
+    
     /**
      * 发送回复
      * @param oid 评论区id
@@ -45,7 +50,12 @@ export class Comment {
      * @param message 回复内容
      * @returns 
      */
-     async reply(oid: string, type: Btype, root: number, parent: number, message: string): Promise<AddResponse> {
+    async reply(root: number, parent: number, message: string): Promise<AddResponse>;
+    async reply(root: number, parent: number, message: string, oid?: string, type?: Btype): Promise<AddResponse> {
+        oid = oid ?? this.oid;
+        type = type ?? this.type;
+        if (!oid || !type) throw "需要提供oid和type";
+        
         let payload = {
             oid,
             message,
@@ -72,7 +82,12 @@ export class Comment {
      * @param type 评论区类型
      * @returns 
      */
-    async delete(oid: string, reply_id: string, type: Btype): Promise<CommonResponse> {
+    async delete(reply_id: string): Promise<CommonResponse>;
+    async delete(reply_id: string, oid?: string, type?: Btype): Promise<CommonResponse> {
+        oid = oid ?? this.oid;
+        type = type ?? this.type;
+        if (!oid || !type) throw "需要提供oid和type";
+
         return Request.post(
             "https://api.bilibili.com/x/v2/reply/del",
             querystring.stringify({
@@ -93,7 +108,12 @@ export class Comment {
      * @param type 评论区类型
      * @returns 
      */
-    async top(oid: string, reply_id: string, type: Btype, action: true): Promise<CommonResponse> {
+    async top(reply_id: string, actionL: true): Promise<CommonResponse>;
+    async top(reply_id: string, action: true, oid?: string, type?: Btype): Promise<CommonResponse> {
+        oid = oid ?? this.oid;
+        type = type ?? this.type;
+        if (!oid || !type) throw "需要提供oid和type";
+        
         return Request.post(
             "https://api.bilibili.com/x/v2/reply/top",
             querystring.stringify({
@@ -115,7 +135,12 @@ export class Comment {
      * @param page_num 评论区页数
      * @returns 
      */
-    async list(oid: string, type: Btype, page_num = 0, sort = SortBy.like): Promise<ListResponse> {
+    async list(page_num: number, sort: SortBy): Promise<ListResponse>;
+    async list(page_num = 0, sort = SortBy.like, oid?: string, type?: Btype): Promise<ListResponse> {
+        oid = oid ?? this.oid;
+        type = type ?? this.type;
+        if (!oid || !type) throw "需要提供oid和type";
+        
         return Request.get(
             "https://api.bilibili.com/x/v2/reply",
             {
@@ -138,7 +163,12 @@ export class Comment {
      * @param type 	评论区类型
      * @returns 
      */
-    async thumb(oid: string, rpid: string, type: Btype, action = true): Promise<CommonResponse> {
+    async thumb(rpid: string, action: boolean): Promise<CommonResponse> 
+    async thumb(rpid: string, action = true, oid?: string, type?: Btype): Promise<CommonResponse> {
+        oid = oid ?? this.oid;
+        type = type ?? this.type;
+        if (!oid || !type) throw "需要提供oid和type";
+        
         return Request.get(
             "https://api.bilibili.com/x/v2/reply/action",
             {
@@ -160,7 +190,12 @@ export class Comment {
      * @param type 评论区类型
      * @returns 
      */
-    async hate(oid: string, rpid: string, type: Btype, action = true): Promise<CommonResponse> {
+    async hate(rpid: string, action: true): Promise<CommonResponse>
+    async hate(rpid: string, action = true, oid?: string, type?: Btype): Promise<CommonResponse> {
+        oid = oid ?? this.oid;
+        type = type ?? this.type;
+        if (!oid || !type) throw "需要提供oid和type";
+        
         return Request.get(
             "http://api.bilibili.com/x/v2/reply/hate",
             {
