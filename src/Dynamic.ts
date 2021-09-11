@@ -93,6 +93,7 @@ export class Dynamic {
      * @returns 
      */
     public async schduledCreate(publish_time: Date, text: string, images?: Array<string | Buffer | ReadStream>): Promise<DraftResponse> {
+        if (new Date < publish_time) throw "定时发布时间必须大于当前时间";
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_draft/v1/dynamic_draft/add_draft",
             querystring.stringify({
