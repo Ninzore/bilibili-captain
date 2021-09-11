@@ -20,6 +20,12 @@ export interface CreateResponse {
     _gt_:           number;
 }
 
+export interface DraftResponse {
+    errmsg:   string;
+    draft_id: number;
+    _gt_:     number;
+}
+
 export interface RepostResponse {
     result: number;
     errmsg: string;

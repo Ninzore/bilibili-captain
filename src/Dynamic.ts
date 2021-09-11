@@ -3,7 +3,7 @@ import * as FormData from "form-data";
 import * as querystring from "query-string";
 import { ReadStream } from "fs-extra"
 import {BiliCredential} from "./BiliCredential";
-import {UploadBfsResponse, CreateResponse, RepostResponse, DynamiDetail} from "./types/Dynamic";
+import {UploadBfsResponse, CreateResponse, RepostResponse, DynamiDetail, DraftResponse} from "./types/Dynamic";
 import { baseResponse } from "./types/Common";
 import {Request} from "./Request";
 import {Common} from "./Common";
@@ -55,9 +55,58 @@ export class Dynamic {
      * 发送动态
      * @param text 动态文字
      * @param images 动态图片
+     * @param publish_time 发布时间
      * @returns 
      */
-    async create(text: string, images?: Array<string | Buffer | ReadStream>): Promise<CreateResponse> {
+    async create(text: string): Promise<CreateResponse>
+    async create(text: string, images: Array<string | Buffer | ReadStream>): Promise<CreateResponse>
+    async create(text: string, images: [], publish_time: Date): Promise<DraftResponse>
+    async create(text: string, images: Array<string | Buffer | ReadStream>, publish_time: Date): Promise<DraftResponse>
+    async create(text: string, images?: Array<string | Buffer | ReadStream>, publish_time?: Date): Promise<CreateResponse | DraftResponse> {
+        if (publish_time) return this.schduledCreate(publish_time, text, images);
+        else return images ?
+        Request.post(
+            "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/create_draw",
+            querystring.stringify({
+                ...await this._dynamicRequest(text, images),
+                csrf: this.credential.csfr,
+                csrf_token: this.credential.csfr
+            }),
+            this.credential
+        ) : 
+        Request.post(
+            "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/create",
+            querystring.stringify({
+                ...await this._dynamicRequest(text),
+                csrf: this.credential.csfr,
+                csrf_token: this.credential.csfr
+            }),
+            this.credential
+        );
+    }
+
+    /**
+     * 发送定时动态
+     * @param publish_time 发布时间
+     * @param text 动态文字
+     * @param images 动态图片
+     * @returns 
+     */
+    public async schduledCreate(publish_time: Date, text: string, images?: Array<string | Buffer | ReadStream>): Promise<DraftResponse> {
+        return Request.post(
+            "https://api.vc.bilibili.com/dynamic_draft/v1/dynamic_draft/add_draft",
+            querystring.stringify({
+                type: images ? 2 : 4,
+                request: JSON.stringify(await this._dynamicRequest(text, images)),
+                publish_time: publish_time.getTime() / 1000 >> 0,
+                csrf: this.credential.csfr,
+                csrf_token: this.credential.csfr
+            }),
+            this.credential
+        ).then(res => {return res.data});
+    }
+
+    private async _dynamicRequest(text: string, images?: Array<string | Buffer | ReadStream>): Promise<Object> {
         let at_uids: string[] = [];
         let ctrl: object[] = [];
         if (text.indexOf("@") != -1) ({at_uids, ctrl} = await Common.parseAt(text));
@@ -75,48 +124,35 @@ export class Dynamic {
                     img_height: res.data.image_height
                 });
             }
-            
-            return Request.post(
-                "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/create_draw",
-                querystring.stringify({
-                    biz: 3,
-                    category: 3,
-                    type: 0,
-                    pictures: JSON.stringify(pictures),
-                    title: "",
-                    tags: "",
-                    description: text,
-                    content: text,
-                    setting: '{"copy_forbidden":0,"cachedTime":0}',
-                    from: "create.dynamic.web",
-                    up_choose_comment: 0,
-                    up_close_comment: 0,
-                    extension: '{"emoji_type":1,"from":{"emoji_type":1},"flag_cfg":{}}',
-                    at_uids: at_uids_str,
-                    at_control: ctrl_str,
-                    csrf: this.credential.csfr,
-                    csrf_token: this.credential.csfr
-                }),
-                this.credential
-            );
-        }
-        else return Request.post(
-            "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/create",
-            querystring.stringify({
-                dynamic_id: 0,
-                type: 4,
-                rid: 0,
+            return {
+                biz: 3,
+                category: 3,
+                type: 0,
+                pictures: JSON.stringify(pictures),
+                title: "",
+                tags: "",
+                description: text,
                 content: text,
-                extension: '{"emoji_type":1,"from":{"emoji_type":1},"flag_cfg":{}}',
-                at_uids: at_uids_str,
-                ctrl: ctrl_str,
+                setting: '{"copy_forbidden":0,"cachedTime":0}',
+                from: "create.dynamic.web",
                 up_choose_comment: 0,
                 up_close_comment: 0,
-                csrf: this.credential.csfr,
-                csrf_token: this.credential.csfr
-            }),
-            this.credential
-        );
+                extension: '{"emoji_type":1,"from":{"emoji_type":1},"flag_cfg":{}}',
+                at_uids: at_uids_str,
+                at_control: ctrl_str
+            }
+        }
+        else return {
+            dynamic_id: 0,
+            type: 4,
+            rid: 0,
+            content: text,
+            extension: '{"emoji_type":1,"from":{"emoji_type":1},"flag_cfg":{}}',
+            at_uids: at_uids_str,
+            ctrl: ctrl_str,
+            up_choose_comment: 0,
+            up_close_comment: 0
+        }
     }
 
     /**
