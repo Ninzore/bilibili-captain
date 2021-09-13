@@ -14,16 +14,48 @@ export interface UploadBfsResponse {
 export interface CreateResponse {
     result:         number;
     errmsg:         string;
-    dynamic_id:     number;
     create_result:  number;
+    dynamic_id:     number;
     dynamic_id_str: string;
     _gt_:           number;
 }
 
-export interface DraftResponse {
+export interface CreateDraftResponse {
     errmsg:   string;
     draft_id: number;
     _gt_:     number;
+}
+
+export interface PublishDraftResponse {
+    result:         number;
+    errmsg:         string;
+    create_ec:      number;
+    dynamic_id:     number;
+    dynamic_id_str: string;
+    _gt_:           number;
+}
+
+export interface RmDraftResponse {
+    errmsg:   string;
+    _gt_:     number;
+}
+
+export interface GetDraftsResponse {
+    drafts: Draft[];
+    _gt_:   number;
+}
+
+interface GetDraftsResponse {
+    draft_id:       number;
+    uid:            number;
+    type:           number;
+    publish_time:   number;
+    request:        string;
+    update_time:    number;
+    publish_status: number;
+    error_code:     number;
+    error_msg:      string;
+    user_profile:   UserProfile;
 }
 
 export interface RepostResponse {

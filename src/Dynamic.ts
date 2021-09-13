@@ -3,7 +3,8 @@ import * as FormData from "form-data";
 import * as querystring from "query-string";
 import { ReadStream } from "fs-extra"
 import {BiliCredential} from "./BiliCredential";
-import {UploadBfsResponse, CreateResponse, RepostResponse, DynamiDetail, DraftResponse} from "./types/Dynamic";
+import {UploadBfsResponse, CreateResponse, RepostResponse, DynamiDetail, 
+    CreateDraftResponse, PublishDraftResponse, RmDraftResponse, GetDraftsResponse} from "./types/Dynamic";
 import { baseResponse } from "./types/Common";
 import {Request} from "./Request";
 import {Common} from "./Common";
@@ -60,9 +61,9 @@ export class Dynamic {
      */
     async create(text: string): Promise<CreateResponse>
     async create(text: string, images: Array<string | Buffer | ReadStream>): Promise<CreateResponse>
-    async create(text: string, images: [], publish_time: Date): Promise<DraftResponse>
-    async create(text: string, images: Array<string | Buffer | ReadStream>, publish_time: Date): Promise<DraftResponse>
-    async create(text: string, images?: Array<string | Buffer | ReadStream>, publish_time?: Date): Promise<CreateResponse | DraftResponse> {
+    async create(text: string, images: [], publish_time: Date): Promise<CreateDraftResponse>
+    async create(text: string, images: Array<string | Buffer | ReadStream>, publish_time: Date): Promise<CreateDraftResponse>
+    async create(text: string, images?: Array<string | Buffer | ReadStream>, publish_time?: Date): Promise<CreateResponse | CreateDraftResponse> {
         if (publish_time) return this.schduledCreate(publish_time, text, images);
         else return images ?
         Request.post(
@@ -92,7 +93,7 @@ export class Dynamic {
      * @param images 动态图片
      * @returns 
      */
-    public async schduledCreate(publish_time: Date, text: string, images?: Array<string | Buffer | ReadStream>): Promise<DraftResponse> {
+    async schduledCreate(publish_time: Date, text: string, images?: Array<string | Buffer | ReadStream>): Promise<CreateDraftResponse> {
         if (new Date() > publish_time) throw "定时发布时间必须大于当前时间";
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_draft/v1/dynamic_draft/add_draft",
@@ -165,7 +166,52 @@ export class Dynamic {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/rm_dynamic",
             querystring.stringify({
-                dynamic_id: dynamic_id,
+                dynamic_id,
+                csrf: this.credential.csfr,
+                csrf_token: this.credential.csfr
+            }),
+            this.credential
+        );
+    }
+
+    /**
+     * 获取尚未发布的定时动态列表
+     * @returns 
+     */
+    async getDrafts(): Promise<GetDraftsResponse> {
+        return Request.get(
+            "https://api.vc.bilibili.com/dynamic_draft/v1/dynamic_draft/get_drafts",
+            {},
+            this.credential
+        ).then(res => {return res.data});
+    }
+
+    /**
+     * 立即发布定时动态
+     * @param draft_id 
+     */
+    async publishDraft(draft_id: string): Promise<PublishDraftResponse> {
+        return Request.post(
+            "https://api.vc.bilibili.com/dynamic_draft/v1/dynamic_draft/publish_now",
+            querystring.stringify({
+                draft_id,
+                csrf: this.credential.csfr,
+                csrf_token: this.credential.csfr
+            }),
+            this.credential
+        );
+    }
+
+    /**
+     * 删除定时动态
+     * @param draft_id 草稿id
+     * @returns 
+     */
+    async rmDraft(draft_id: string): Promise<RmDraftResponse> {
+        return Request.post(
+            "https://api.vc.bilibili.com/dynamic_draft/v1/dynamic_draft/rm_draft",
+            querystring.stringify({
+                draft_id,
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr
             }),
