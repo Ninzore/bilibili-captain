@@ -247,7 +247,7 @@ export class Dynamic {
      * @param action 点赞或取消点赞
      * @returns 
      */
-    async thumb(dynamic_id: string, action: boolean): Promise<baseResponse> {
+    async like(dynamic_id: string, action: boolean): Promise<boolean> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_like/v1/dynamic_like/thumb",
             querystring.stringify({
@@ -257,7 +257,7 @@ export class Dynamic {
                 csrf_token: this.credential.csfr
             }),
             this.credential
-        );
+        ).then(res => {return res.code === 0});
     }
 
     /**

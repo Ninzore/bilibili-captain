@@ -163,8 +163,8 @@ export class Comment {
      * @param type 	评论区类型
      * @returns 
      */
-    async thumb(rpid: string, action: boolean): Promise<CommonResponse> 
-    async thumb(rpid: string, action = true, oid?: string, type?: Btype): Promise<CommonResponse> {
+    async like(rpid: string, action: boolean): Promise<boolean> 
+    async like(rpid: string, action = true, oid?: string, type?: Btype): Promise<boolean> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
         if (!oid || !type) throw "需要提供oid和type";
@@ -180,7 +180,7 @@ export class Comment {
                 jsonp: "jsonp",
             },
             this.credential
-        );
+        ).then(res => {return res.code === 0});
     }
 
     /**
@@ -190,8 +190,8 @@ export class Comment {
      * @param type 评论区类型
      * @returns 
      */
-    async hate(rpid: string, action: true): Promise<CommonResponse>
-    async hate(rpid: string, action = true, oid?: string, type?: Btype): Promise<CommonResponse> {
+    async hate(rpid: string, action: true): Promise<boolean>
+    async hate(rpid: string, action = true, oid?: string, type?: Btype): Promise<boolean> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
         if (!oid || !type) throw "需要提供oid和type";
@@ -207,6 +207,6 @@ export class Comment {
                 jsonp: "jsonp",
             },
             this.credential
-        );
+        ).then(res => {return res.code === 0});
     }
 }
