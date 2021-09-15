@@ -3,12 +3,15 @@ import {BiliCredential} from "./BiliCredential";
 import {Request} from "./Request";
 import { StatResponse, PageListReturn, VideoDetail, TripleResponse } from "./types/Video";
 import {Common} from "./Common";
+import {Comment} from "./Comment";
 
 export class Video {
     private credential: BiliCredential;
-    
+    public comment!: Comment;
+
     constructor(credential: BiliCredential, public bvid?: string) {
         this.credential = credential;
+        if (bvid) this.comment = new Comment(credential, Common.avBvInterchange(bvid), 1);
     }
     
     /**
@@ -17,7 +20,7 @@ export class Video {
      * @returns 
      */
     async detail(bvid?: string): Promise<VideoDetail> {
-        bvid = bvid || this.bvid;
+        bvid = bvid ?? this.bvid;
         if (!bvid) throw "需要提供bvid";
         return Request.get(
             "http://api.bilibili.com/x/web-interface/view",
@@ -49,6 +52,11 @@ export class Video {
             {bvid}
         ).then(res => {return res.data;});
     }
+    async desc(bvid?: string): Promise<string> {
+        bvid = bvid ?? this.bvid;
+        if (!bvid) throw "需要提供bvid";
+        return Video.desc(bvid);
+    }
 
     /**
      * 视频状态
@@ -78,9 +86,14 @@ export class Video {
             {bvid}
         ).then(res => {return res.data;});
     }
+    async pagelist(bvid?: string): Promise<PageListReturn[]> {
+        bvid = bvid ?? this.bvid;
+        if (!bvid) throw "需要提供bvid";
+        return Video.pagelist(bvid);
+    }
 
     /**
-     * 
+     * 点赞
      * @param like 
      * @param bvid 
      * @returns 
