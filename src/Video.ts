@@ -102,10 +102,10 @@ export class Video {
         bvid = bvid || this.bvid;
         if (!bvid) throw "需要提供bvid";
         return Request.post(
-            "https://api.vc.bilibili.com/dynamic_like/v1/dynamic_like/thumb",
+            "https://api.bilibili.com/x/web-interface/archive/like",
             querystring.stringify({
                 bvid,
-                like,
+                like: like ? 1 : 2,
                 csrf: this.credential.csfr
             }),
             this.credential
