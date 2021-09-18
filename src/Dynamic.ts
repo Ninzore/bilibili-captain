@@ -158,6 +158,59 @@ export class Dynamic {
     }
 
     /**
+     * 发起投票（开发中不要动）
+     * @param title 标题
+     * @param options 选项
+     * @param opt_images 图片选项
+     * @param choice_cnt 最多选择几项
+     * @param desc 简介说明
+     * @param duration 时长，3天|1周|一个月
+     * @returns 
+     */
+    private async createVote(title: string, 
+        options: string[], opt_images: Array<string | Buffer | ReadStream> = [],
+        choice_cnt = 1, desc = "", duration: 259200 | 604800 | 2592000 = 259200) {
+        if (options.length < 2) throw "最少需要2个选项";
+        else if (options.length > 20) throw "最多只能有20个选项";
+        else if (choice_cnt > options.length) throw "可选数量必须比选项少";
+
+        
+        let new_opts: {desc: string, img_url?: string}[] = [];
+        if (opt_images.length > 0) {
+            if (options.length != opt_images.length) throw "选项和选项配图数量不一致";
+            for (let i in options) {
+                if (options[i].length < 1) throw "选项的长度必须大于0";
+                let res = await this.uploadBfs(opt_images[i]);
+                new_opts[i].img_url = res.data.image_url;
+                new_opts[i].desc = desc;
+            }
+        }
+        else {
+            for (const desc of options) {
+                if (desc.length < 1) throw "选项的长度必须大于0";
+                new_opts.push({desc: desc});
+            }
+        }
+
+        return Request.post(
+            "https://api.vc.bilibili.com/vote_svr/v1/vote_svr/create_vote",
+            querystring.stringify({
+                info: querystring.stringify({
+                    title,
+                    desc,
+                    type: 0,
+                    choice_cnt,
+                    duration,
+                    new_opts
+                }, {arrayFormat: "index"}),
+                csrf: this.credential.csfr,
+                csrf_token: this.credential.csfr
+            }),
+            this.credential
+        );
+    }
+
+    /**
      * 删除动态
      * @param dynamic_id 动态id
      * @returns 
