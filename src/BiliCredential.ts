@@ -3,9 +3,9 @@ export class BiliCredential {
     public cookie_str: string;
     public csfr: string;
 
-    constructor(sessdata: string, bili_jct: string, buvid3: string) {
-        this.cookie = {"SESSDATA": sessdata, bili_jct, buvid3};
-        this.csfr = bili_jct, buvid3;
+    constructor(sessdata: string, bili_jct: string) {
+        this.cookie = {"SESSDATA": sessdata, bili_jct};
+        this.csfr = bili_jct;
 
         let tmp = [];
         for (let [k, v] of Object.entries(this.cookie)) {
