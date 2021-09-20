@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.3.0] - 2021-09-20
+### Feat
+* 添加prejudge
+### Change
+* credential中可选的提供uid
+
+## [0.2.9] - 2021-09-19
+### Change
+* 不再要求提供buvid3
+
 ## [0.2.7] - 2021-09-17
 ### Feat
 * 操作和用户的关系
