@@ -151,7 +151,7 @@ interface OfficialVerify {
     desc: string;
 }
 
-interface Pendant {
+export interface Pendant {
     pid:                 number;
     name:                string;
     image:               string;

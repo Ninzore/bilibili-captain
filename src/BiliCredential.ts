@@ -3,7 +3,7 @@ export class BiliCredential {
     public cookie_str: string;
     public csfr: string;
 
-    constructor(sessdata: string, bili_jct: string) {
+    constructor(sessdata: string, bili_jct: string, public uid?: number) {
         this.cookie = {"SESSDATA": sessdata, bili_jct};
         this.csfr = bili_jct;
 

@@ -1,4 +1,4 @@
-import {UserProfile, Display} from "./User";
+import {UserProfile, Display, Pendant} from "./User";
 
 export interface UploadBfsResponse {
     code:    number;
@@ -102,4 +102,59 @@ interface Desc {
     pre_dy_id_str:  string;
     orig_dy_id_str: string;
     rid_str:        string;
+}
+
+export interface PreJudgeResp {
+    result:              number;
+    errmsg:              string;
+    upload_size:         number;
+    lottery_right:       number;
+    clip_time_threshold: number;
+    user_profile:        UserProfile;
+    prejudge_json:       string;
+    verify_first:        number;
+    clip_published_user: number;
+    up_choose_comment:   number;
+    up_permission:       UpPermission;
+    add_ugc_attach_card: number;
+    yellow_bar:          YellowBar;
+    plus_red_dot:        PlusRedDot;
+    _gt_:                number;
+}
+
+interface PlusRedDot {
+    plus_has_red_dot: number;
+    items:            Item[];
+}
+
+interface Item {
+    type:        number;
+    has_red_dot: number;
+}
+
+interface UpPermission {
+    up_choose_comment:  { permission: number; };
+    up_control_comment: { permission: number; };
+    up_control_danmu:   { permission: number; };
+    up_control_reserve: UpControlReserve[];
+}
+
+interface UpControlReserve {
+    type:       number;
+    permission: number;
+    title:      string;
+    icon:       string;
+    subtitle:   string;
+    toast:      string;
+    jump_url:   string;
+}
+
+interface UserProfile {
+    info:    { uid: number; };
+    pendant: Pendant;
+}
+
+interface YellowBar {
+    text: string;
+    url:  string;
 }

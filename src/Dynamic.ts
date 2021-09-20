@@ -4,7 +4,8 @@ import * as querystring from "query-string";
 import { ReadStream } from "fs-extra"
 import {BiliCredential} from "./BiliCredential";
 import {UploadBfsResponse, CreateResponse, RepostResponse, DynamiDetail, 
-    CreateDraftResponse, PublishDraftResponse, RmDraftResponse, GetDraftsResponse} from "./types/Dynamic";
+    CreateDraftResponse, PublishDraftResponse, RmDraftResponse, GetDraftsResponse,
+    PreJudgeResp} from "./types/Dynamic";
 import { baseResponse } from "./types/Common";
 import {Request} from "./Request";
 import {Common} from "./Common";
@@ -270,6 +271,20 @@ export class Dynamic {
             }),
             this.credential
         );
+    }
+
+    /**
+     * 检查是否能够发布动态，在发布后调用
+     * @param selfuid 自己的uid，不填的话会自动调用BiliCredential中的uid
+     * @returns 
+     */
+    async preJudge(selfuid?: number): Promise<PreJudgeResp> {
+        if (!selfuid && !this.credential.uid) throw "需要提供自己的uid";
+        return Request.get(
+            "https://api.vc.bilibili.com/dynamic_repost/v1/dynamic_repost/pre_judge",
+            {uid: selfuid || this.credential.uid},
+            this.credential
+        ).then(res => {return res.data;});
     }
 
     /**
