@@ -1,8 +1,8 @@
 import * as querystring from "query-string";
-import {BiliCredential} from "./BiliCredential";
-import {Request} from "./Request";
-import {Btype} from "./types/Common";
-import {AddResponse, SortBy, ListResponse, CommonResponse} from "./types/Comment";
+import {BiliCredential} from "./biliCredential";
+import {Request} from "./request";
+import {Btype} from "./types/common";
+import {AddResponse, SortBy, ListResponse, CommonResponse} from "./types/comment";
 
 export class Comment {
     private credential: BiliCredential;

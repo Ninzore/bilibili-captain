@@ -1,9 +1,9 @@
 import * as querystring from "query-string";
-import {BiliCredential} from "./BiliCredential";
-import {Request} from "./Request";
-import { StatResponse, PageListReturn, VideoDetail, TripleResponse } from "./types/Video";
-import {Common} from "./Common";
-import {Comment} from "./Comment";
+import {BiliCredential} from "./biliCredential";
+import {Request} from "./request";
+import { StatResponse, PageListReturn, VideoDetail, TripleResponse } from "./types/video";
+import {Common} from "./common";
+import {Comment} from "./comment";
 
 export class Video {
     private credential: BiliCredential;

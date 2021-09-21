@@ -1,8 +1,8 @@
 import axios from "axios";
-import {User} from "./User";
-import {Dynamic} from "./Dynamic";
-import {Request} from "./Request";
-import {ParseAt, DynamicCtrl, ResInfo, Btype} from "./types/Common";
+import {User} from "./user";
+import {Dynamic} from "./dynamic";
+import {Request} from "./request";
+import {ParseAt, DynamicCtrl, ResInfo, Btype} from "./types/common";
 
 
 interface Obj {

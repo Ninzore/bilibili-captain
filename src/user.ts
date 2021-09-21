@@ -1,6 +1,6 @@
-import {BiliCredential} from "./BiliCredential";
-import {Request} from "./Request";
-import {UserInfo, UserInfoFromSearch} from "./types/User";
+import {BiliCredential} from "./biliCredential";
+import {Request} from "./request";
+import {UserInfo, UserInfoFromSearch} from "./types/user";
 
 export class User {
     private credential: BiliCredential;
@@ -42,13 +42,12 @@ export class User {
             }
         }
     }
-     
-
-     /**
-      * 根据关键字搜索用户
-      * @param keyword 搜索关键字
-      * @returns 
-      */
+    
+    /**
+     * 根据关键字搜索用户
+     * @param keyword 搜索关键字
+     * @returns 
+     */
     static async searchUser(keyword: string): Promise<UserInfoFromSearch[]> {
         return Request.get(
             "https://app.bilibili.com/x/v2/search/type",

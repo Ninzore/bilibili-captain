@@ -1,4 +1,4 @@
-import {UserProfile, Display, Pendant} from "./User";
+import {UserProfile, Display, Pendant} from "./user";
 
 export interface UploadBfsResponse {
     code:    number;

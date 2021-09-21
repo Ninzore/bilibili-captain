@@ -2,13 +2,14 @@ import * as fs from "fs-extra";
 import * as FormData from "form-data";
 import * as querystring from "query-string";
 import { ReadStream } from "fs-extra"
-import {BiliCredential} from "./BiliCredential";
+import {BiliCredential} from "./biliCredential";
 import {UploadBfsResponse, CreateResponse, RepostResponse, DynamiDetail, 
     CreateDraftResponse, PublishDraftResponse, RmDraftResponse, GetDraftsResponse,
-    PreJudgeResp} from "./types/Dynamic";
-import { baseResponse } from "./types/Common";
-import {Request} from "./Request";
-import {Common} from "./Common";
+    PreJudgeResp} from "./types/dynamic";
+import { baseResponse } from "./types/common";
+import {Request} from "./request";
+import {Common} from "./common";
+
 
 export class Dynamic {
     private credential: BiliCredential;

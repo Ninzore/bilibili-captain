@@ -1,4 +1,4 @@
-import {Member, ContentMember} from "./User";
+import {Member, ContentMember} from "./user";
 
 declare const enum SortBy {
     time,
