@@ -1,6 +1,6 @@
-import {BiliCredential} from "./BiliCredential";
-import {Request} from "./Request";
-import {UnreadMsgCountResp, UnreadPrivateMsgCountResp} from "./types/message";
+import {BiliCredential} from "./biliCredential";
+import {Request} from "./request";
+import {UnreadMsgCountResp, UnreadPrivateMsgCountResp, ReplyMsgResp, LikeResp} from "./types/message";
 
 export class Message {
     private credential;
@@ -20,7 +20,7 @@ export class Message {
                 build: 0,
                 mobi_app: "web"
             }
-        )
+        ).then(res => {return res.data;});
     }
 
     /**
@@ -36,6 +36,28 @@ export class Message {
                 mobi_app: "web"
             },
             this.credential
-        );
+        ).then(res => {return res.data;});
+    }
+
+    async replys(): Promise<ReplyMsgResp> {
+        return Request.get(
+            "https://api.bilibili.com/x/msgfeed/reply",
+            {
+                platform:   "web",
+                build: 0,
+                mobi_app: "web"
+            }
+        ).then(res => {return res.data;});
+    }
+
+    async likes(): Promise<LikeResp> {
+        return Request.get(
+            "https://api.bilibili.com/x/msgfeed/like",
+            {
+                platform:   "web",
+                build: 0,
+                mobi_app: "web"
+            }
+        ).then(res => {return res.data;});
     }
 }
