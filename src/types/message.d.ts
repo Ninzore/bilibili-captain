@@ -137,11 +137,43 @@ enum LikeType {
 
 interface Total {
     cursor: Cursor;
-    items:  ItemElement[];
+    items:  LikeItemElement[];
 }
 
 interface Cursor {
     is_end: boolean;
     id:     number;
     time:   number;
+}
+
+export interface SysMsgResp {
+    id:               number;
+    cursor:           number;
+    type:             number;
+    title:            string;
+    content:          string;
+    source:           Source;
+    time_at:          string;
+    card_type:        number;
+    card_brief:       string;
+    card_msg_brief:   string;
+    card_cover:       string;
+    card_story_title: string;
+    card_link:        string;
+    mc:               string;
+    is_station:       number;
+    is_send:          number;
+    notify_cursor:    number;
+    publisher?:       Publisher;
+}
+
+export interface Publisher {
+    name: string;
+    mid:  number;
+    face: string;
+}
+
+export interface Source {
+    name: string;
+    logo: string;
 }

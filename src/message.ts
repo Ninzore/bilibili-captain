@@ -1,7 +1,7 @@
 import {BiliCredential} from "./biliCredential";
 import {Request} from "./request";
 import {UnreadMsgCountResp, UnreadPrivateMsgCountResp, 
-    ReplyMsgResp, LikeResp} from "./types/message";
+    ReplyMsgResp, LikeResp, SysMsgResp} from "./types/message";
 
 export class Message {
     private credential;
@@ -57,6 +57,25 @@ export class Message {
             "https://api.bilibili.com/x/msgfeed/like",
             {
                 platform:   "web",
+                build: 0,
+                mobi_app: "web"
+            },
+            this.credential
+        ).then(res => {return res.data;});
+    }
+
+    /**
+     * 
+     * @param cursor 
+     * @returns 
+     */
+    async sysMsg(cursor?: string): Promise<SysMsgResp[]> {
+        return Request.get(
+            "https://message.bilibili.com/x/sys-msg/query_notify_list",
+            {
+                cursor,
+                csrf: this.credential.csfr,
+                data_type: 1,
                 build: 0,
                 mobi_app: "web"
             },
