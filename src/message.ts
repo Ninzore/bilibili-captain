@@ -1,6 +1,7 @@
 import {BiliCredential} from "./biliCredential";
 import {Request} from "./request";
-import {UnreadMsgCountResp, UnreadPrivateMsgCountResp, ReplyMsgResp, LikeResp} from "./types/message";
+import {UnreadMsgCountResp, UnreadPrivateMsgCountResp, 
+    ReplyMsgResp, LikeResp} from "./types/message";
 
 export class Message {
     private credential;
@@ -46,7 +47,8 @@ export class Message {
                 platform:   "web",
                 build: 0,
                 mobi_app: "web"
-            }
+            },
+            this.credential
         ).then(res => {return res.data;});
     }
 
@@ -57,7 +59,8 @@ export class Message {
                 platform:   "web",
                 build: 0,
                 mobi_app: "web"
-            }
+            },
+            this.credential
         ).then(res => {return res.data;});
     }
 }
