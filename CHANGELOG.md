@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.3] - 2021-09-23
+### Feat
+* 系统消息
+
+### Fix
+* 没加credential
+* Total.items内容错误
+
 ## [0.3.2] - 2021-09-22
 ### Feat
 * 回复消息
