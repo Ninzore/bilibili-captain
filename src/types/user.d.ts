@@ -142,7 +142,7 @@ interface Nameplate {
     name:        string;
     image:       string;
     image_small: string;
-    level:       string;
+    level:       Level;
     condition:   string;
 }
 
@@ -284,4 +284,38 @@ interface Relation2 {
 export interface AddOnCardInfo {
     add_on_card_show_type: number;
     vote_card:             string;
+}
+
+export interface BatchUserInfosResp {
+    mid:             string;
+    uname:           string;
+    sex:             number;
+    sign:            string;
+    rank:            number;
+    DisplayRank:     string;
+    level_info:      LevelInfo;
+    pendant:         Pendant;
+    nameplate:       Nameplate;
+    official_verify: OfficialVerify;
+    vip:             Vip3;
+    uid:             number;
+    face:            string;
+}
+
+enum Level {
+    Empty = "",
+    普通勋章 = "普通勋章",
+    稀有勋章 = "稀有勋章",
+    高级勋章 = "高级勋章",
+}
+
+interface Vip3 {
+    vipType:       number;
+    vipDueDate:    number;
+    dueRemark:     string;
+    accessStatus:  number;
+    vipStatus:     number;
+    vipStatusWarn: string;
+    themeType:     number;
+    label:         {path: string};
 }

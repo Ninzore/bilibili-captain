@@ -1,6 +1,6 @@
 import {BiliCredential} from "./biliCredential";
 import {Request} from "./request";
-import {UserInfo, UserInfoFromSearch} from "./types/user";
+import {UserInfo, UserInfoFromSearch, BatchUserInfosResp} from "./types/user";
 
 export class User {
     private credential: BiliCredential;
@@ -18,6 +18,18 @@ export class User {
         return await Request.get(
             "https://api.bilibili.com/x/space/acc/info", 
             {mid}
+        ).then(res => {return res.data;});
+    }
+
+    /**
+     * 批量查看用户信息
+     * @param mid 用户id
+     * @returns 
+     */
+     static async batchInfos(uids: number[]): Promise<BatchUserInfosResp[]> {
+        return await Request.get(
+            "https://api.vc.bilibili.com/account/v1/user/infos", 
+            {uids: uids.join(",")}
         ).then(res => {return res.data;});
     }
 
