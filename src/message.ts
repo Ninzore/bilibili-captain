@@ -1,7 +1,7 @@
 import {BiliCredential} from "./biliCredential";
 import {Request} from "./request";
 import {UnreadMsgCountResp, UnreadPrivateMsgCountResp, 
-    ReplyMsgResp, LikeResp, SysMsgResp} from "./types/message";
+    ReplyMsgResp, LikeResp, SysMsgResp, MsgBoxResp} from "./types/message";
 
 export class Message {
     private credential;
@@ -40,6 +40,10 @@ export class Message {
         ).then(res => {return res.data;});
     }
 
+    /**
+     * 回复我的
+     * @returns 
+     */
     async replys(): Promise<ReplyMsgResp> {
         return Request.get(
             "https://api.bilibili.com/x/msgfeed/reply",
@@ -52,6 +56,10 @@ export class Message {
         ).then(res => {return res.data;});
     }
 
+    /**
+     * 收到的赞
+     * @returns 
+     */
     async likes(): Promise<LikeResp> {
         return Request.get(
             "https://api.bilibili.com/x/msgfeed/like",
@@ -65,8 +73,8 @@ export class Message {
     }
 
     /**
-     * 
-     * @param cursor 
+     * 获取系统通知
+     * @param cursor 起始位置
      * @returns 
      */
     async sysMsg(cursor?: string): Promise<SysMsgResp[]> {
@@ -79,6 +87,32 @@ export class Message {
                 build: 0,
                 mobi_app: "web"
             },
+            this.credential
+        ).then(res => {return res.data;});
+    }
+
+    /**
+     * 获取私信列表
+     * @param end_ts 起始时间戳，以微秒ms计
+     * @session_type 消息类型，平时为1，3和5是什么为未知
+     * @returns 
+     */
+    async messageBox(end_ts?: string, session_type?: 1 | 3 | 5): Promise<MsgBoxResp> {
+        if (session_type) session_type = 1;
+        let params = {
+            end_ts,
+            session_type,
+            group_fold: 1,
+            unfollow_fold: 0,
+            sort_rule: 2,
+            build: 0,
+            mobi_app: "web"
+        };
+        if (!end_ts) delete params.end_ts;
+
+        return Request.get(
+            "https://api.vc.bilibili.com/session_svr/v1/session_svr/get_sessions",
+            params,
             this.credential
         ).then(res => {return res.data;});
     }

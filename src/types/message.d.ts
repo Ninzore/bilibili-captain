@@ -167,13 +167,60 @@ export interface SysMsgResp {
     publisher?:       Publisher;
 }
 
-export interface Publisher {
+interface Publisher {
     name: string;
     mid:  number;
     face: string;
 }
 
-export interface Source {
+interface Source {
     name: string;
     logo: string;
+}
+
+export interface MsgBoxResp {
+    session_list:          SessionList[];
+    has_more:              number;  // 1表示后面还有，0就没有了
+    anti_disturb_cleaning: boolean;
+    is_address_list_empty: number;
+}
+
+interface SessionList {
+    talker_id:    number;  // 发信人uid
+    session_type: number;  // 目前只见过1
+    at_seqno:     number;
+    top_ts:       number;
+    group_name:   string;
+    group_cover:  string;
+    is_follow:    number;
+    is_dnd:       number;
+    ack_seqno:    number;
+    ack_ts:       number;  // 被读取时间
+    session_ts:   number;  // 发送时间
+    unread_count: number;
+    last_msg:     LastMsg;
+    group_type:   number;
+    can_fold:     number;
+    status:       number;
+    max_seqno:    number;
+    new_push_msg: number;
+    setting:      number;
+    is_guardian:  number;
+    is_intercept: number;
+    is_trust:     number;
+}
+
+interface LastMsg {
+    sender_uid:       number;
+    receiver_type:    number;
+    receiver_id:      number;
+    msg_type:         number;
+    content:          string;  // 消息内容在这里
+    msg_seqno:        number;
+    timestamp:        number;
+    at_uids:          string | null;
+    msg_key:          number;
+    msg_status:       number;
+    notify_code:      string;
+    new_face_version: number;
 }
