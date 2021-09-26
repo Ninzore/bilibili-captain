@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.3.6] - 2021-09-26
+### Feat
+* 读取私信
+* 标记已读
+
+### Fix
+* MsgBoxResp.SessionList.LastMsg.at_uids type error
+
+## [0.3.5] - 2021-09-25
+### Feat
+* 获取私信列表
+
+## [0.3.4] - 2021-09-24
+### Feat
+* 批量获取用户信息
+
 ## [0.3.3] - 2021-09-23
 ### Feat
 * 系统消息
