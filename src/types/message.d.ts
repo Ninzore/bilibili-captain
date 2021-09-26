@@ -218,7 +218,7 @@ interface LastMsg {
     content:          string;  // 消息内容在这里
     msg_seqno:        number;
     timestamp:        number;
-    at_uids:          string | null;
+    at_uids:          number[] | null;
     msg_key:          number;
     msg_status:       number;
     notify_code:      string;
