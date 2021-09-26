@@ -1,7 +1,9 @@
+import * as querystring from "query-string";
 import {BiliCredential} from "./biliCredential";
 import {Request} from "./request";
 import {UnreadMsgCountResp, UnreadPrivateMsgCountResp, 
-    ReplyMsgResp, LikeResp, SysMsgResp, MsgBoxResp} from "./types/message";
+    ReplyMsgResp, LikeResp, SysMsgResp, MsgBoxResp,
+    MessageFromResp} from "./types/message";
 
 export class Message {
     private credential;
@@ -114,6 +116,50 @@ export class Message {
             "https://api.vc.bilibili.com/session_svr/v1/session_svr/get_sessions",
             params,
             this.credential
+        ).then(res => {return res.data;});
+    }
+
+    /**
+     * 标记已读某人消息
+     * @param talker_id 发信人uid
+     * @returns 
+     */
+    async updateAck(talker_id: number): Promise<boolean> {
+        return Request.post(
+            "https://api.vc.bilibili.com/session_svr/v1/session_svr/update_ack",
+            querystring.stringify({
+                talker_id,
+                session_type: 1,
+                ack_seqno: 6,
+                build: 0,
+                mobi_app: "web",
+                csrf_token: this.credential.csfr,
+                csrf: this.credential.csfr
+            }),
+            this.credential
+        ).then(res => {return res.msg === "0"});
+    }
+
+    /**
+     * 获取来自某人的消息
+     * @param talker_id 发信人uid
+     * @param size 获取数量
+     * @param begin_seqno 从第几条开始
+     * @param session_type 消息类型
+     * @returns 
+     */
+    async messageFrom(talker_id: number, size = 20, begin_seqno = 0, session_type = 1): Promise<MessageFromResp> {
+        return Request.get(
+            "https://api.vc.bilibili.com/svr_sync/v1/svr_sync/fetch_session_msgs",
+            {
+                sender_device_id: 1,
+                talker_id,
+                session_type,
+                size,
+                begin_seqno,
+                build: 0,
+                mobi_app: "web"
+            }
         ).then(res => {return res.data;});
     }
 }

@@ -224,3 +224,25 @@ interface LastMsg {
     notify_code:      string;
     new_face_version: number;
 }
+
+export interface MessageFromResp {
+    messages:  Message[];
+    has_more:  number;
+    min_seqno: number;
+    max_seqno: number;
+}
+
+interface Message {
+    sender_uid:        number;
+    receiver_type:     number;
+    receiver_id:       number;
+    msg_type:          number;
+    content:           string;
+    msg_seqno:         number;
+    timestamp:         number;
+    at_uids:           number[];
+    msg_key:           number;
+    msg_status:        number;
+    notify_code:       string;
+    new_face_version?: number;
+}
