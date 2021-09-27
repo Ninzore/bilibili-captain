@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.7] - 2021-09-27
+### Feat
+* 发起投票
+
+### Chore
+* move from query-string to qs
+
 ## [0.3.6] - 2021-09-26
 ### Feat
 * 读取私信
