@@ -1,6 +1,6 @@
 import * as fs from "fs-extra";
 import * as FormData from "form-data";
-import * as querystring from "query-string";
+import * as qs from "qs";
 import { ReadStream } from "fs-extra"
 import {BiliCredential} from "./biliCredential";
 import {UploadBfsResponse, CreateResponse, RepostResponse, DynamiDetail, 
@@ -19,7 +19,7 @@ export class Dynamic {
     }
 
     /**
-     * 
+     * 获取动态内容
      * @param dynamic_id 动态id
      * @returns 
      */
@@ -70,7 +70,7 @@ export class Dynamic {
         else return images ?
         Request.post(
             "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/create_draw",
-            querystring.stringify({
+            qs.stringify({
                 ...await this._dynamicRequest(text, images),
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr
@@ -79,13 +79,13 @@ export class Dynamic {
         ) : 
         Request.post(
             "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/create",
-            querystring.stringify({
+            qs.stringify({
                 ...await this._dynamicRequest(text),
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr
             }),
             this.credential
-        );
+        ).then(res => {return res.data});
     }
 
     /**
@@ -99,7 +99,7 @@ export class Dynamic {
         if (new Date() > publish_time) throw "定时发布时间必须大于当前时间";
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_draft/v1/dynamic_draft/add_draft",
-            querystring.stringify({
+            qs.stringify({
                 type: images ? 2 : 4,
                 request: JSON.stringify(await this._dynamicRequest(text, images)),
                 publish_time: publish_time.getTime() / 1000 >> 0,
@@ -196,8 +196,8 @@ export class Dynamic {
 
         return Request.post(
             "https://api.vc.bilibili.com/vote_svr/v1/vote_svr/create_vote",
-            querystring.stringify({
-                info: querystring.stringify({
+            qs.stringify({
+                info: qs.stringify({
                     title,
                     desc,
                     type: 0,
@@ -220,7 +220,7 @@ export class Dynamic {
     async remove(dynamic_id: string): Promise<baseResponse> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/rm_dynamic",
-            querystring.stringify({
+            qs.stringify({
                 dynamic_id,
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr
@@ -248,7 +248,7 @@ export class Dynamic {
     async publishDraft(draft_id: string): Promise<PublishDraftResponse> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_draft/v1/dynamic_draft/publish_now",
-            querystring.stringify({
+            qs.stringify({
                 draft_id,
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr
@@ -265,7 +265,7 @@ export class Dynamic {
     async rmDraft(draft_id: string): Promise<RmDraftResponse> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_draft/v1/dynamic_draft/rm_draft",
-            querystring.stringify({
+            qs.stringify({
                 draft_id,
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr
@@ -297,7 +297,7 @@ export class Dynamic {
     async repost(dynamic_id: string, text = "转发动态"): Promise<RepostResponse> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_repost/v1/dynamic_repost/repost",
-            querystring.stringify({
+            qs.stringify({
                 dynamic_id: dynamic_id,
                 content: text,
                 extension: '{"emoji_type":1}',
@@ -319,7 +319,7 @@ export class Dynamic {
     async like(dynamic_id: string, action: boolean): Promise<boolean> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_like/v1/dynamic_like/thumb",
-            querystring.stringify({
+            qs.stringify({
                 dynamic_id: dynamic_id,
                 up: action ? 1 : 2,
                 csrf: this.credential.csfr,
@@ -340,7 +340,7 @@ export class Dynamic {
     async share(rid: string, content: string, type: 8 | 64 | 256 | 2048 | 4097, up_uid: string = "0"): Promise<CreateResponse> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_repost/v1/dynamic_repost/share",
-            querystring.stringify({
+            qs.stringify({
                 rid,
                 type,
                 content,

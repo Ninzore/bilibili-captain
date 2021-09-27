@@ -1,4 +1,4 @@
-import * as querystring from "query-string";
+import * as qs from "qs";
 import {BiliCredential} from "./biliCredential";
 import {Request} from "./request";
 import {Btype} from "./types/common";
@@ -36,7 +36,7 @@ export class Comment {
 
         return Request.post(
             "https://api.bilibili.com/x/v2/reply/add",
-            querystring.stringify(payload),
+            qs.stringify(payload),
             this.credential
         ).then(res => {return res;});
     }
@@ -70,7 +70,7 @@ export class Comment {
 
         return Request.post(
             "https://api.bilibili.com/x/v2/reply/add",
-            querystring.stringify(payload),
+            qs.stringify(payload),
             this.credential
         ).then(res => {return res;});
     }
@@ -90,7 +90,7 @@ export class Comment {
 
         return Request.post(
             "https://api.bilibili.com/x/v2/reply/del",
-            querystring.stringify({
+            qs.stringify({
                 oid: oid,
                 rpid: reply_id,
                 type: type,
@@ -116,7 +116,7 @@ export class Comment {
         
         return Request.post(
             "https://api.bilibili.com/x/v2/reply/top",
-            querystring.stringify({
+            qs.stringify({
                 oid,
                 rpid: reply_id,
                 type,

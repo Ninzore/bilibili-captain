@@ -1,4 +1,4 @@
-import * as querystring from "query-string";
+import * as qs from "qs";
 import {BiliCredential} from "./biliCredential";
 import {Request} from "./request";
 import {UnreadMsgCountResp, UnreadPrivateMsgCountResp, 
@@ -127,7 +127,7 @@ export class Message {
     async updateAck(talker_id: number): Promise<boolean> {
         return Request.post(
             "https://api.vc.bilibili.com/session_svr/v1/session_svr/update_ack",
-            querystring.stringify({
+            qs.stringify({
                 talker_id,
                 session_type: 1,
                 ack_seqno: 6,

@@ -1,4 +1,4 @@
-import * as querystring from "query-string";
+import * as qs from "qs";
 import {BiliCredential} from "./biliCredential";
 import {Request} from "./request";
 import { StatResponse, PageListReturn, VideoDetail, TripleResponse } from "./types/video";
@@ -103,7 +103,7 @@ export class Video {
         if (!bvid) throw "需要提供bvid";
         return Request.post(
             "https://api.bilibili.com/x/web-interface/archive/like",
-            querystring.stringify({
+            qs.stringify({
                 bvid,
                 like: like ? 1 : 2,
                 csrf: this.credential.csfr
@@ -124,7 +124,7 @@ export class Video {
         if (!bvid) throw "需要提供bvid";
         return Request.post(
             "https://api.bilibili.com/x/web-interface/coin/add",
-            querystring.stringify({
+            qs.stringify({
                 bvid,
                 multiply,
                 select_like,
@@ -152,7 +152,7 @@ export class Video {
         
         return Request.post(
             "https://api.bilibili.com/x/v3/fav/resource/deal",
-            querystring.stringify({
+            qs.stringify({
                 rid,
                 type: 2,
                 add_media_ids: add_media_ids?.join(",") ?? "",
@@ -173,7 +173,7 @@ export class Video {
         if (!bvid) throw "需要提供bvid";
         return Request.post(
             "http://api.bilibili.com/x/web-interface/archive/like/triple",
-            querystring.stringify({
+            qs.stringify({
                 bvid,
                 csrf: this.credential.csfr
             }),
