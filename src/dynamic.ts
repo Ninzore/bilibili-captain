@@ -169,9 +169,10 @@ export class Dynamic {
      * @param duration 时长，3天|1周|一个月
      * @returns 
      */
-    private async createVote(title: string, 
-        options: string[], opt_images: Array<string | Buffer | ReadStream> = [],
-        choice_cnt = 1, desc = "", duration: 259200 | 604800 | 2592000 = 259200) {
+    async createVote(title: string, options: string[], 
+        opt_images: Array<string | Buffer | ReadStream> = [],
+        choice_cnt = 1, desc = "", duration: 259200 | 604800 | 2592000 = 259200)
+        : Promise <string> {
         if (options.length < 2) throw "最少需要2个选项";
         else if (options.length > 20) throw "最多只能有20个选项";
         else if (choice_cnt > options.length) throw "可选数量必须比选项少";
@@ -197,19 +198,19 @@ export class Dynamic {
         return Request.post(
             "https://api.vc.bilibili.com/vote_svr/v1/vote_svr/create_vote",
             qs.stringify({
-                info: qs.stringify({
+                info: {
                     title,
                     desc,
                     type: 0,
                     choice_cnt,
                     duration,
-                    new_opts
-                }, {arrayFormat: "index"}),
+                    options: new_opts
+                },
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr
             }),
             this.credential
-        );
+        ).then(res => {return res.data.vote_id});
     }
 
     /**
