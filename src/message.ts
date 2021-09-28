@@ -3,7 +3,7 @@ import {BiliCredential} from "./biliCredential";
 import {Request} from "./request";
 import {UnreadMsgCountResp, UnreadPrivateMsgCountResp, 
     ReplyMsgResp, LikeResp, SysMsgResp, MsgBoxResp,
-    MessageFromResp} from "./types/message";
+    MessageFromResp, SendMsgResp} from "./types/message";
 
 export class Message {
     private credential;
@@ -161,5 +161,44 @@ export class Message {
                 mobi_app: "web"
             }
         ).then(res => {return res.data;});
+    }
+
+    /**
+     * 发送私信
+     * @param receiver_id 收件人uid
+     * @param content 私信内容，发送图片时需要序列化
+     * @param msg_type 根据内容而定，文本=1，图片=2，撤回=5
+     * @returns 
+     */
+    async sendMsg(receiver_id: number, content: string, msg_type: 1 | 2 | 5 = 1): Promise<SendMsgResp> {
+        if (!this.credential.uid) throw "需要在BiliCredential中提供uid"
+        return Request.post(
+            "https://api.vc.bilibili.com/web_im/v1/web_im/send_msg",
+            qs.stringify({
+                msg: {
+                    sender_uid: this.credential.uid,
+                    receiver_id,
+                    receiver_type: 1,
+                    msg_type,
+                    msg_status: 0,
+                    content,
+                    dev_id: this.credential.dev_id,
+                    timestamp: ~~ (Date.now() / 1000)
+                },
+                csrf_token: this.credential.csfr,
+                csrf: this.credential.csfr
+            }),
+            this.credential
+        ).then(res => {return res.data;});
+    }
+
+    /**
+     * 撤回私信
+     * @param receiver_id 收件人uid
+     * @param msg_key 私信消息id
+     * @returns 
+     */
+    async withdrawMsg(receiver_id: number, msg_key: string): Promise<SendMsgResp> {
+        return this.sendMsg(receiver_id, msg_key, 5);
     }
 }
