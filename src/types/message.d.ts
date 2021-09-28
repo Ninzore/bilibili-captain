@@ -246,3 +246,9 @@ interface Message {
     notify_code:       string;
     new_face_version?: number;
 }
+
+export interface SendMsgResp {
+    msg_key:        number;
+    msg_content?:   string;
+    key_hit_infos?: {};
+}
