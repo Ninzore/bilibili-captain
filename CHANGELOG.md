@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.8] - 2021-09-28
+### Feat
+* 发送私信
+* BiliCredential中增加dev_id
+
 ## [0.3.7] - 2021-09-27
 ### Feat
 * 发起投票
