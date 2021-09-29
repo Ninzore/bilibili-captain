@@ -1,8 +1,12 @@
 import axios from "axios";
+import * as fs from "fs-extra";
+import { ReadStream } from "fs-extra"
+import * as FormData from "form-data";
 import {User} from "./user";
 import {Dynamic} from "./dynamic";
 import {Request} from "./request";
-import {ParseAt, DynamicCtrl, ResInfo, Btype} from "./types/common";
+import {ParseAt, DynamicCtrl, ResInfo, Btype, UploadBfsResp} from "./types/common";
+import { BiliCredential } from "./biliCredential";
 
 
 interface Obj {
@@ -40,6 +44,30 @@ export class Common {
             });
         }
         return {at_uids, ctrl};
+    }
+
+    /**
+     * 上传文件
+     * @param file 上传文件
+     * @returns 
+     */
+    static async uploadBfs(file: string | Buffer | ReadStream, credential: BiliCredential): Promise<UploadBfsResp> {
+        let form = new FormData();
+        form.append("biz", "dyn");
+        form.append("category", "daily");
+        form.append("csrf", credential.csfr);
+        if (typeof file == "string") file = fs.createReadStream(file);
+        form.append("file_up", file);
+
+        return Request.post(
+            "https://api.bilibili.com/x/dynamic/feed/draw/upload_bfs",
+            form,
+            credential
+        ).then(res => {
+            if (res.code == 0) console.log("image has been uploaded");
+            else throw "image upload failed";
+            return res.data;
+        });
     }
 
     static async expandShortUrl(shortUrl: string): Promise<string> {

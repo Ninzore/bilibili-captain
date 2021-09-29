@@ -27,3 +27,9 @@ export interface baseResponse {
     message: string;
     ttl:     number;
 }
+
+export interface UploadBfsResp {
+    image_url:    string;
+    image_width:  number;
+    image_height: number;
+}

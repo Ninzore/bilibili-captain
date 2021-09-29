@@ -1,9 +1,7 @@
-import * as fs from "fs-extra";
-import * as FormData from "form-data";
 import * as qs from "qs";
 import { ReadStream } from "fs-extra"
 import {BiliCredential} from "./biliCredential";
-import {UploadBfsResponse, CreateResponse, RepostResponse, DynamiDetail, 
+import {CreateResponse, RepostResponse, DynamiDetail, 
     CreateDraftResponse, PublishDraftResponse, RmDraftResponse, GetDraftsResponse,
     PreJudgeResp} from "./types/dynamic";
 import { baseResponse } from "./types/common";
@@ -29,30 +27,6 @@ export class Dynamic {
             {dynamic_id}
         );
     }
-
-    /**
-     * 上传文件
-     * @param file 上传文件
-     * @returns 
-     */
-    async uploadBfs(file: string | Buffer | ReadStream): Promise<UploadBfsResponse> {
-        let form = new FormData();
-        form.append("biz", "dyn");
-        form.append("category", "daily");
-        form.append("csrf", this.credential.csfr);
-        if (typeof file == "string") file = fs.createReadStream(file);
-        form.append("file_up", file);
-
-        return Request.post(
-            "https://api.bilibili.com/x/dynamic/feed/draw/upload_bfs",
-            form,
-            this.credential
-        ).then(res => {
-            if (res.code == 0) console.log("image has been uploaded");
-            else throw "image upload failed";
-            return res;
-        });
-    }
     
     /**
      * 发送动态
@@ -65,7 +39,8 @@ export class Dynamic {
     async create(text: string, images: Array<string | Buffer | ReadStream>): Promise<CreateResponse>
     async create(text: string, images: [], publish_time: Date): Promise<CreateDraftResponse>
     async create(text: string, images: Array<string | Buffer | ReadStream>, publish_time: Date): Promise<CreateDraftResponse>
-    async create(text: string, images?: Array<string | Buffer | ReadStream>, publish_time?: Date): Promise<CreateResponse | CreateDraftResponse> {
+    async create(text: string, images?: Array<string | Buffer | ReadStream>, publish_time?: Date)
+    : Promise<CreateResponse | CreateDraftResponse> {
         if (publish_time) return this.schduledCreate(publish_time, text, images);
         else return images ?
         Request.post(
@@ -121,11 +96,11 @@ export class Dynamic {
             let pictures = [];
 
             for (let img of images) {
-                let res =  await this.uploadBfs(img);
+                let res =  await Common.uploadBfs(img, this.credential);
                 pictures.push({
-                    img_src: res.data.image_url,
-                    img_width: res.data.image_width,
-                    img_height: res.data.image_height
+                    img_src: res.image_url,
+                    img_width: res.image_width,
+                    img_height: res.image_height
                 });
             }
             return {
@@ -183,8 +158,8 @@ export class Dynamic {
             if (options.length != opt_images.length) throw "选项和选项配图数量不一致";
             for (let i in options) {
                 if (options[i].length < 1) throw "选项的长度必须大于0";
-                let res = await this.uploadBfs(opt_images[i]);
-                new_opts[i].img_url = res.data.image_url;
+                let res = await Common.uploadBfs(opt_images[i], this.credential);
+                new_opts[i].img_url = res.image_url;
                 new_opts[i].desc = desc;
             }
         }

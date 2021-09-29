@@ -1,16 +1,5 @@
 import {UserProfile, Display, Pendant} from "./user";
 
-export interface UploadBfsResponse {
-    code:    number;
-    message: string;
-    ttl:     number;
-    data: {
-        image_url:    string;
-        image_width:  number;
-        image_height: number;
-    };
-}
-
 export interface CreateResponse {
     result:         number;
     errmsg:         string;
