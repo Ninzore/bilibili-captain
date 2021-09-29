@@ -1,5 +1,5 @@
 import * as qs from "qs";
-import { ReadStream } from "fs-extra"
+import { ReadStream } from "fs-extra";
 import {BiliCredential} from "./biliCredential";
 import {CreateResponse, RepostResponse, DynamiDetail, 
     CreateDraftResponse, PublishDraftResponse, RmDraftResponse, GetDraftsResponse,
