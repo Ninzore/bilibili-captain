@@ -1,4 +1,5 @@
 import axios from "axios";
+import * as path from "path"
 import * as fs from "fs-extra";
 import { ReadStream } from "fs-extra"
 import * as FormData from "form-data";
@@ -8,6 +9,8 @@ import {Request} from "./request";
 import {ParseAt, DynamicCtrl, ResInfo, Btype, UploadBfsResp} from "./types/common";
 import { BiliCredential } from "./biliCredential";
 
+const MAX_SIZE = 20 * 1024 * 1024;
+const ACCEPT_TYPE = ["jpg", "jpeg", "png", "gif", "pjp", "pjepg", "jfif"];
 
 interface Obj {
     [key: string]: number;
@@ -52,22 +55,46 @@ export class Common {
      * @returns 
      */
     static async uploadBfs(file: string | Buffer | ReadStream, credential: BiliCredential): Promise<UploadBfsResp> {
+        if (typeof file === "string") {
+            const filepath = file;
+            if (/^http/.test(filepath)) {
+                file = await axios.get(filepath, {
+                    responseType: "stream"
+                }).then(res => {
+                    const mime = res.headers["content-type"];
+                    const subtype = mime.split("/")[1];
+
+                    if (!/image/.test(mime)) throw "链接指向内容的 content-type 不是 image";
+                    else if (!ACCEPT_TYPE.some(supported => supported == subtype)) throw "仅支持JPG PNG GIF";
+                    else if (parseInt(res.headers["content-length"]) > MAX_SIZE) throw "文件大小请勿超过20M";
+                    else return res.data;
+                });
+            }
+            else {
+                fs.stat(filepath, (err, stat) => {
+                    if (err) throw `${filepath} ${
+                        err.code === "ENOENT" ? "文件不存在" : "文件不可读"}`;
+                    else if (!stat.isFile()) throw `${filepath} 不是文件`;
+                    else if (stat.size > MAX_SIZE) throw "文件大小请勿超过20M";
+                });
+                const extname = path.extname(filepath).slice(1);
+                if (!ACCEPT_TYPE.some(supported => 
+                    supported.toLowerCase() == extname)) throw "仅支持JPG PNG GIF";
+                file = fs.createReadStream(filepath);
+            }   
+        }
+        
         let form = new FormData();
         form.append("biz", "dyn");
+        form.append("file_up", file);
         form.append("category", "daily");
         form.append("csrf", credential.csfr);
-        if (typeof file == "string") file = fs.createReadStream(file);
-        form.append("file_up", file);
 
         return Request.post(
             "https://api.bilibili.com/x/dynamic/feed/draw/upload_bfs",
             form,
             credential
-        ).then(res => {
-            if (res.code == 0) console.log("image has been uploaded");
-            else throw "image upload failed";
-            return res.data;
-        });
+        ).then(res => {return res.data;});
     }
 
     static async expandShortUrl(shortUrl: string): Promise<string> {
