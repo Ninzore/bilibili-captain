@@ -29,6 +29,51 @@ export interface UserInfo {
     series:           Series;
 }
 
+export interface MyInfoResp {
+    mid:             number;
+    name:            string;
+    sex:             string;
+    face:            string;
+    sign:            string;
+    rank:            number;
+    level:           number;
+    jointime:        number;
+    moral:           number;
+    silence:         number;
+    email_status:    number;
+    tel_status:      number;
+    identification:  number;
+    vip:             Vip;
+    pendant:         Pendant;
+    nameplate:       Nameplate;
+    official:        Official;
+    birthday:        number;
+    is_tourist:      number;
+    is_fake_account: number;
+    pin_prompting:   number;
+    is_deleted:      number;
+    in_reg_audit:    number;
+    is_rip_user:     boolean;
+    profession:      MyInfoProfession;
+    level_exp:       LevelExp;
+    coins:           number;
+    following:       number;
+    follower:        number;
+}
+
+interface LevelExp {
+    current_level: number;
+    current_min:   number;
+    current_exp:   number;
+    next_exp:      number;
+}
+
+interface MyInfoProfession {
+    id:        number;
+    name:      string;
+    show_name: string;
+}
+
 interface FansMedal {
     show:  boolean;
     wear:  boolean;

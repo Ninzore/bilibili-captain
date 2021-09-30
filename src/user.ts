@@ -1,12 +1,19 @@
 import {BiliCredential} from "./biliCredential";
 import {Request} from "./request";
-import {UserInfo, UserInfoFromSearch, BatchUserInfosResp} from "./types/user";
+import {UserInfo, MyInfoResp, UserInfoFromSearch, BatchUserInfosResp} from "./types/user";
 
 export class User {
     private credential: BiliCredential;
 
     constructor(credential: BiliCredential, public uid?: number) {
         this.credential = credential;
+        
+        if (!uid && !this.credential.uid) this.myInfo().then(res => {
+            this.uid = res.mid;
+        }).catch(() => {
+            console.error("自动获取mid失败");
+            uid = undefined;
+        });
     }
 
     /**
@@ -15,7 +22,7 @@ export class User {
      * @returns 
      */
     static async info(mid: number): Promise<UserInfo> {
-        return await Request.get(
+        return Request.get(
             "https://api.bilibili.com/x/space/acc/info", 
             {mid}
         ).then(res => {return res.data;});
@@ -26,11 +33,25 @@ export class User {
      * @param mid 用户id
      * @returns 
      */
-     static async batchInfos(uids: number[]): Promise<BatchUserInfosResp[]> {
-        return await Request.get(
+    static async batchInfos(uids: number[]): Promise<BatchUserInfosResp[]> {
+        return Request.get(
             "https://api.vc.bilibili.com/account/v1/user/infos", 
             {uids: uids.join(",")}
         ).then(res => {return res.data;});
+    }
+
+    /**
+     * 获取自己的信息
+     * @returns 
+     */
+    static async myInfo(credential: BiliCredential): Promise<MyInfoResp> {
+        return Request.get(
+            "https://api.bilibili.com/x/space/myinfo",
+            {}, credential
+        ).then(res => {return res.data});
+    }
+    async myInfo(): Promise<MyInfoResp> {
+        return User.myInfo(this.credential);
     }
 
     /**
