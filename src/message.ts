@@ -1,6 +1,8 @@
 import * as qs from "qs";
+import fs from "fs-extra";
 import {BiliCredential} from "./biliCredential";
 import {Request} from "./request";
+import {Common} from "./common";
 import {UnreadMsgCountResp, UnreadPrivateMsgCountResp, 
     ReplyMsgResp, LikeResp, SysMsgResp, MsgBoxResp,
     MessageFromResp, SendMsgResp} from "./types/message";
@@ -170,8 +172,33 @@ export class Message {
      * @param msg_type 根据内容而定，文本=1，图片=2，撤回=5
      * @returns 
      */
-    async sendMsg(receiver_id: number, content: string, msg_type: 1 | 2 | 5 = 1): Promise<SendMsgResp> {
-        if (!this.credential.uid) throw "需要在BiliCredential中提供uid"
+    async sendMsg(receiver_id: number, content: string | Buffer | fs.ReadStream, msg_type: 1 | 2 | 5 = 1): Promise<any> {
+        if (!this.credential.uid) throw "需要在BiliCredential中提供uid";
+        
+        switch (msg_type) {
+            case 1: {
+                if (typeof content !== "string") throw "msg_type 为1时候 content 应为 string";
+                content = JSON.stringify({content});
+                break;
+            }
+            case 2: {
+                const uploaded = await Common.uploadBfs(content, this.credential);
+                const ready = {
+                    url: uploaded.image_url,
+                    height: uploaded.image_height,
+                    width: uploaded.image_width
+                };
+                content = JSON.stringify(ready);
+                break;
+            }
+            case 5: {
+                if (typeof content !== "string" 
+                || !/^\d{19}$/.test(content)) throw "撤回消息的 msg_key 应该为一个19位数";
+                break;
+            }
+            default: throw "msg_type错误";
+        }
+
         return Request.post(
             "https://api.vc.bilibili.com/web_im/v1/web_im/send_msg",
             qs.stringify({
@@ -189,7 +216,15 @@ export class Message {
                 csrf: this.credential.csfr
             }),
             this.credential
-        ).then(res => {return res.data;});
+        )
+        .then(res => {return res.data;})
+        .catch(err => {
+            if (err.code == 21041) {
+                console.warn("消息已超期，不能撤回了哦");
+                return err;
+            }
+            else throw err;
+        });
     }
 
     /**
