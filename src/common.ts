@@ -54,7 +54,7 @@ export class Common {
      * @param file 上传文件
      * @returns 
      */
-    static async uploadBfs(file: string | Buffer | ReadStream, credential: BiliCredential): Promise<UploadBfsResp> {
+    static async uploadBfs(file: fs.PathLike | ReadStream, credential: BiliCredential): Promise<UploadBfsResp> {
         if (typeof file === "string") {
             const filepath = file;
             if (/^http/.test(filepath)) {
@@ -77,9 +77,9 @@ export class Common {
                     else if (!stat.isFile()) throw `${filepath} 不是文件`;
                     else if (stat.size > MAX_SIZE) throw "文件大小请勿超过20M";
                 });
-                const extname = path.extname(filepath).slice(1);
+                const extname = path.extname(filepath).slice(1).toLowerCase();
                 if (!ACCEPT_TYPE.some(supported => 
-                    supported.toLowerCase() == extname)) throw "仅支持JPG PNG GIF";
+                    supported == extname)) throw "仅支持JPG PNG GIF";
                 file = fs.createReadStream(filepath);
             }   
         }
