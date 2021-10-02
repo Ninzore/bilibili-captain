@@ -100,7 +100,7 @@ interface Medal {
     score:              number;
 }
 
-interface LiveRoom {
+export interface LiveRoom {
     roomStatus:     number;
     liveStatus:     number;
     url:            string;
