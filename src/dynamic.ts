@@ -1,13 +1,10 @@
-import * as qs from "qs";
-import { ReadStream } from "fs-extra";
+import {ReadStream} from "fs-extra";
 import {BiliCredential} from "./biliCredential";
 import {CreateResponse, RepostResponse, DynamiDetail, 
     CreateDraftResponse, PublishDraftResponse, RmDraftResponse, GetDraftsResponse,
     PreJudgeResp} from "./types/dynamic";
-import { baseResponse } from "./types/common";
 import {Request} from "./request";
 import {Common} from "./common";
-
 
 export class Dynamic {
     private credential: BiliCredential;
@@ -35,32 +32,29 @@ export class Dynamic {
      * @param publish_time 发布时间
      * @returns 
      */
-    async create(text: string): Promise<CreateResponse>
-    async create(text: string, images: Array<string | Buffer | ReadStream>): Promise<CreateResponse>
+    async create(text: string, images?: Array<string | Buffer | ReadStream>): Promise<CreateResponse>
     async create(text: string, images: [], publish_time: Date): Promise<CreateDraftResponse>
     async create(text: string, images: Array<string | Buffer | ReadStream>, publish_time: Date): Promise<CreateDraftResponse>
     async create(text: string, images?: Array<string | Buffer | ReadStream>, publish_time?: Date)
     : Promise<CreateResponse | CreateDraftResponse> {
         if (publish_time) return this.schduledCreate(publish_time, text, images);
-        else return images ?
-        Request.post(
+        return images ? Request.post(
             "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/create_draw",
-            qs.stringify({
+            {
                 ...await this._dynamicRequest(text, images),
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr
-            }),
+            },
             this.credential
-        ) : 
-        Request.post(
+        ).then(res => res.data) : Request.post(
             "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/create",
-            qs.stringify({
+            {
                 ...await this._dynamicRequest(text),
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr
-            }),
+            },
             this.credential
-        ).then(res => {return res.data});
+        ).then(res => res.data);
     }
 
     /**
@@ -74,29 +68,29 @@ export class Dynamic {
         if (new Date() > publish_time) throw "定时发布时间必须大于当前时间";
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_draft/v1/dynamic_draft/add_draft",
-            qs.stringify({
+            {
                 type: images ? 2 : 4,
                 request: JSON.stringify(await this._dynamicRequest(text, images)),
                 publish_time: publish_time.getTime() / 1000 >> 0,
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr
-            }),
+            },
             this.credential
-        ).then(res => {return res.data});
+        ).then(res => res.data);
     }
 
     private async _dynamicRequest(text: string, images?: Array<string | Buffer | ReadStream>): Promise<Object> {
         let at_uids: string[] = [];
         let ctrl: object[] = [];
         if (text.indexOf("@") != -1) ({at_uids, ctrl} = await Common.parseAt(text));
-        let at_uids_str = JSON.stringify(at_uids);
-        let ctrl_str = JSON.stringify(ctrl);
+        const at_uids_str = JSON.stringify(at_uids);
+        const ctrl_str = JSON.stringify(ctrl);
 
         if (images) {
             let pictures = [];
 
-            for (let img of images) {
-                let res =  await Common.uploadBfs(img, this.credential);
+            for (const img of images) {
+                const res =  await Common.uploadBfs(img, this.credential);
                 pictures.push({
                     img_src: res.image_url,
                     img_width: res.image_width,
@@ -121,7 +115,7 @@ export class Dynamic {
                 at_control: ctrl_str
             }
         }
-        else return {
+        return {
             dynamic_id: 0,
             type: 4,
             rid: 0,
@@ -151,14 +145,13 @@ export class Dynamic {
         if (options.length < 2) throw "最少需要2个选项";
         else if (options.length > 20) throw "最多只能有20个选项";
         else if (choice_cnt > options.length) throw "可选数量必须比选项少";
-
         
         let new_opts: {desc: string, img_url?: string}[] = [];
         if (opt_images.length > 0) {
             if (options.length != opt_images.length) throw "选项和选项配图数量不一致";
-            for (let i in options) {
+            for (const i in options) {
                 if (options[i].length < 1) throw "选项的长度必须大于0";
-                let res = await Common.uploadBfs(opt_images[i], this.credential);
+                const res = await Common.uploadBfs(opt_images[i], this.credential);
                 new_opts[i].img_url = res.image_url;
                 new_opts[i].desc = desc;
             }
@@ -172,7 +165,7 @@ export class Dynamic {
 
         return Request.post(
             "https://api.vc.bilibili.com/vote_svr/v1/vote_svr/create_vote",
-            qs.stringify({
+            {
                 info: {
                     title,
                     desc,
@@ -183,9 +176,9 @@ export class Dynamic {
                 },
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr
-            }),
+            },
             this.credential
-        ).then(res => {return res.data.vote_id});
+        ).then(res => res.data.vote_id);
     }
 
     /**
@@ -193,16 +186,16 @@ export class Dynamic {
      * @param dynamic_id 动态id
      * @returns 
      */
-    async remove(dynamic_id: string): Promise<baseResponse> {
+    async remove(dynamic_id: string): Promise<boolean> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/rm_dynamic",
-            qs.stringify({
+            {
                 dynamic_id,
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr
-            }),
+            },
             this.credential
-        );
+        ).then(res => res.code === 0);
     }
 
     /**
@@ -214,7 +207,7 @@ export class Dynamic {
             "https://api.vc.bilibili.com/dynamic_draft/v1/dynamic_draft/get_drafts",
             {},
             this.credential
-        ).then(res => {return res.data});
+        ).then(res =>  res.data);
     }
 
     /**
@@ -224,11 +217,11 @@ export class Dynamic {
     async publishDraft(draft_id: string): Promise<PublishDraftResponse> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_draft/v1/dynamic_draft/publish_now",
-            qs.stringify({
+            {
                 draft_id,
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr
-            }),
+            },
             this.credential
         );
     }
@@ -241,11 +234,11 @@ export class Dynamic {
     async rmDraft(draft_id: string): Promise<RmDraftResponse> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_draft/v1/dynamic_draft/rm_draft",
-            qs.stringify({
+            {
                 draft_id,
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr
-            }),
+            },
             this.credential
         );
     }
@@ -261,7 +254,7 @@ export class Dynamic {
             "https://api.vc.bilibili.com/dynamic_repost/v1/dynamic_repost/pre_judge",
             {uid: selfuid || this.credential.uid},
             this.credential
-        ).then(res => {return res.data;});
+        ).then(res => res.data);
     }
 
     /**
@@ -273,7 +266,7 @@ export class Dynamic {
     async repost(dynamic_id: string, text = "转发动态"): Promise<RepostResponse> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_repost/v1/dynamic_repost/repost",
-            qs.stringify({
+            {
                 dynamic_id: dynamic_id,
                 content: text,
                 extension: '{"emoji_type":1}',
@@ -281,7 +274,7 @@ export class Dynamic {
                 ctrl: [],
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr
-            }),
+            },
             this.credential
         );
     }
@@ -295,14 +288,14 @@ export class Dynamic {
     async like(dynamic_id: string, action: boolean): Promise<boolean> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_like/v1/dynamic_like/thumb",
-            qs.stringify({
+            {
                 dynamic_id: dynamic_id,
                 up: action ? 1 : 2,
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr
-            }),
+            },
             this.credential
-        ).then(res => {return res.code === 0});
+        ).then(res => res.code === 0);
     }
 
     /**
@@ -316,13 +309,13 @@ export class Dynamic {
     async share(rid: string, content: string, type: 8 | 64 | 256 | 2048 | 4097, up_uid: string = "0"): Promise<CreateResponse> {
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_repost/v1/dynamic_repost/share",
-            qs.stringify({
+            {
                 rid,
                 type,
                 content,
                 uid: up_uid,
                 csrf_token: this.credential.csfr,
-            }),
+            },
             this.credential
         );
     }
