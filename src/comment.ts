@@ -1,4 +1,3 @@
-import * as qs from "qs";
 import {BiliCredential} from "./biliCredential";
 import {Request} from "./request";
 import {Btype} from "./types/common";
@@ -36,7 +35,7 @@ export class Comment {
 
         return Request.post(
             "https://api.bilibili.com/x/v2/reply/add",
-            qs.stringify(payload),
+            payload,
             this.credential
         ).then(res => {return res;});
     }
@@ -70,7 +69,7 @@ export class Comment {
 
         return Request.post(
             "https://api.bilibili.com/x/v2/reply/add",
-            qs.stringify(payload),
+            payload,
             this.credential
         ).then(res => {return res;});
     }
@@ -90,13 +89,13 @@ export class Comment {
 
         return Request.post(
             "https://api.bilibili.com/x/v2/reply/del",
-            qs.stringify({
+            {
                 oid: oid,
                 rpid: reply_id,
                 type: type,
                 jsonp: "jsonp",
                 csrf: this.credential.csfr,
-            }),
+            },
             this.credential
         );
     }
@@ -116,14 +115,14 @@ export class Comment {
         
         return Request.post(
             "https://api.bilibili.com/x/v2/reply/top",
-            qs.stringify({
+            {
                 oid,
                 rpid: reply_id,
                 type,
                 action: action ? 1 : 0,
                 jsonp: "jsonp",
                 csrf: this.credential.csfr,
-            }),
+            },
             this.credential
         );
     }

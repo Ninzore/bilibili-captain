@@ -1,4 +1,3 @@
-import * as qs from "qs";
 import {BiliCredential} from "./biliCredential";
 import {Request} from "./request";
 import { StatResponse, PageListReturn, VideoDetail, TripleResponse } from "./types/video";
@@ -103,11 +102,11 @@ export class Video {
         if (!bvid) throw "需要提供bvid";
         return Request.post(
             "https://api.bilibili.com/x/web-interface/archive/like",
-            qs.stringify({
+            {
                 bvid,
                 like: like ? 1 : 2,
                 csrf: this.credential.csfr
-            }),
+            },
             this.credential
         ).then(res => {return res.code === 0});
     }
@@ -124,12 +123,12 @@ export class Video {
         if (!bvid) throw "需要提供bvid";
         return Request.post(
             "https://api.bilibili.com/x/web-interface/coin/add",
-            qs.stringify({
+            {
                 bvid,
                 multiply,
                 select_like,
                 csrf: this.credential.csfr
-            }),
+            },
             this.credential
         ).then(res => {return res.data.like});
     }
@@ -152,13 +151,13 @@ export class Video {
         
         return Request.post(
             "https://api.bilibili.com/x/v3/fav/resource/deal",
-            qs.stringify({
+            {
                 rid,
                 type: 2,
                 add_media_ids: add_media_ids?.join(",") ?? "",
                 del_media_ids: del_media_ids?.join(",") ?? "",
                 csrf: this.credential.csfr
-            }),
+            },
             this.credential
         ).then(res => {return res.data.prompt});
     }
@@ -173,10 +172,10 @@ export class Video {
         if (!bvid) throw "需要提供bvid";
         return Request.post(
             "http://api.bilibili.com/x/web-interface/archive/like/triple",
-            qs.stringify({
+            {
                 bvid,
                 csrf: this.credential.csfr
-            }),
+            },
             this.credential
         ).then(res => {return res.data});
     }

@@ -1,5 +1,6 @@
 import axios, { Method } from "axios";
 import * as FormData from "form-data";
+import * as qs from "qs";
 import {BiliCredential} from "./biliCredential";
 
 export class Request {
@@ -32,6 +33,7 @@ export class Request {
     }
 
     static async post(url: string, data: string | Object | FormData, credential?: BiliCredential): Promise<any> {
+        if (typeof data === "object") data = qs.stringify(data);
         return this.request(url, "POST", {}, data, credential);
     }
 

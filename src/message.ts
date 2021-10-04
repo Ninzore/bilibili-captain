@@ -1,4 +1,3 @@
-import * as qs from "qs";
 import fs from "fs-extra";
 import {BiliCredential} from "./biliCredential";
 import {Request} from "./request";
@@ -129,7 +128,7 @@ export class Message {
     async updateAck(talker_id: number): Promise<boolean> {
         return Request.post(
             "https://api.vc.bilibili.com/session_svr/v1/session_svr/update_ack",
-            qs.stringify({
+            {
                 talker_id,
                 session_type: 1,
                 ack_seqno: 6,
@@ -137,7 +136,7 @@ export class Message {
                 mobi_app: "web",
                 csrf_token: this.credential.csfr,
                 csrf: this.credential.csfr
-            }),
+            },
             this.credential
         ).then(res => {return res.msg === "0"});
     }
@@ -201,7 +200,7 @@ export class Message {
 
         return Request.post(
             "https://api.vc.bilibili.com/web_im/v1/web_im/send_msg",
-            qs.stringify({
+            {
                 msg: {
                     sender_uid: this.credential.uid,
                     receiver_id,
@@ -214,7 +213,7 @@ export class Message {
                 },
                 csrf_token: this.credential.csfr,
                 csrf: this.credential.csfr
-            }),
+            },
             this.credential
         )
         .then(res => {return res.data;})

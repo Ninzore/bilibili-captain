@@ -45,13 +45,13 @@ export class Live {
 
         return Request.post(
             "http://api.live.bilibili.com/room/v1/Room/startLive",
-            qs.stringify({
+            {
                 room_id: roomid || this.credential.info.liveroom?.roomid,
                 platform: "pc",
                 area_v2: area,
                 csrf_token: this.credential.csfr,
                 csrf: this.credential.csfr
-            }),
+            },
             this.credential
         ).then(res => res.data);
     }
@@ -66,12 +66,12 @@ export class Live {
 
         return Request.post(
             "https://api.live.bilibili.com/room/v1/Room/stopLive",
-            qs.stringify({
+            {
                 room_id: roomid || this.credential.info.liveroom?.roomid,
                 platform: "pc",
                 csrf_token: this.credential.csfr,
                 csrf: this.credential.csfr
-            }),
+            },
             this.credential
         ).then(res => res.data);
     }
@@ -84,10 +84,10 @@ export class Live {
     async streamAddr(reset_key: false): Promise<StreamAddrResp> {
         return Request.get(
             "https://api.live.bilibili.com/xlive/app-blink/v1/live/getWebUpStreamAddr",
-            qs.stringify({
+            {
                 platform: "web",
                 reset_key
-            }),
+            },
             this.credential
         ).then(res => res.data);
     }
@@ -103,13 +103,13 @@ export class Live {
 
         return Request.get(
             "https://api.live.bilibili.com/xlive/app-blink/v1/index/updateRoomNews",
-            qs.stringify({
+            {
                 room_id: this.credential.info.liveroom.roomid,
                 uid: this.credential.uid,
                 content: content,
                 csrf_token: this.credential.csfr,
                 csrf: this.credential.csfr
-            }),
+            },
             this.credential
         ).then(res => res.code === 0);
     }
@@ -150,7 +150,7 @@ export class Live {
 
         return Request.post(
             "https://api.live.bilibili.com/room/v1/Room/update",
-            qs.stringify(form),
+            form,
             this.credential
         ).then(res => res.code === 0);
     }
