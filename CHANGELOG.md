@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.4.5] - 2021-10-05
+### Feat
+* axios auto retry
+* check&read path
+
+### Change
+* uploadBfs no longer support PathLike class
+
+### Delete
+* unused interface
+
+## [0.4.4] - 2021-10-04
+### Change
+* 简化Request调用
+
+### Style
+* 优化代码风格
+
 ## [0.4.3] - 2021-10-03
 ### Feat
 * 刷新推流地址
