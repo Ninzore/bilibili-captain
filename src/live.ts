@@ -1,9 +1,12 @@
-import * as qs from "qs";
+import FormData from "form-data";
+import {ReadStream} from "fs-extra"
 import {Request} from "./request";
+import {readFile} from "./utils";
 import {BiliCredential} from "./biliCredential";
 import {SignResp, LiveUserInfoResp, 
     StartLiveResp, StopLiveResp,
     StreamAddrResp} from "./types/live";
+
 
 export class Live {
     private credential: BiliCredential;
@@ -179,7 +182,16 @@ export class Live {
      * @param add_del 新增或删除，默认为true/新增
      * @returns 
      */
-     async updateTag(tag: string, add_del: boolean): Promise<boolean> {
+    async updateTag(tag: string, add_del: boolean): Promise<boolean> {
         return this._update(tag, add_del ? "add_tag" : "del_tag");
+    }
+
+    async updateCover(cover: string | ReadStream) {
+        if (typeof cover === "string") cover = await readFile(cover);
+            
+        let form = new FormData();
+        form.append("file", cover);
+        form.append("bucket", "live");
+        form.append("dir", "new_room_cover");
     }
 }
