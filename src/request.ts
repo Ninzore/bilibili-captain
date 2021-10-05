@@ -33,7 +33,7 @@ export class Request {
     }
 
     static async post(url: string, data: string | Object | FormData, credential?: BiliCredential): Promise<any> {
-        if (typeof data === "object") data = qs.stringify(data);
+        if (!(data instanceof FormData)) data = qs.stringify(data);
         return this.request(url, "POST", {}, data, credential);
     }
 
