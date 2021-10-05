@@ -22,12 +22,6 @@ export interface ResInfo {
     btype: Btype;
 }
 
-export interface baseResponse {
-    code:    number;
-    message: string;
-    ttl:     number;
-}
-
 export interface UploadBfsResp {
     image_url:    string;
     image_width:  number;
