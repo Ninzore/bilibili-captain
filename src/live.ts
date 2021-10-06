@@ -4,9 +4,8 @@ import {Request} from "./request";
 import {readFile} from "./utils";
 import {BiliCredential} from "./biliCredential";
 import {SignResp, LiveUserInfoResp, 
-    StartLiveResp, StopLiveResp,
-    StreamAddrResp} from "./types/live";
-
+    StartLiveResp, StopLiveResp, StreamAddrResp,
+    UploadCoverResp} from "./types/live";
 
 export class Live {
     private credential: BiliCredential;
@@ -186,12 +185,37 @@ export class Live {
         return this._update(tag, add_del ? "add_tag" : "del_tag");
     }
 
-    async updateCover(cover: string | ReadStream) {
+    private async _uploadCover(cover: string | ReadStream): Promise<UploadCoverResp> {
         if (typeof cover === "string") cover = await readFile(cover);
-            
+        
         let form = new FormData();
         form.append("file", cover);
         form.append("bucket", "live");
         form.append("dir", "new_room_cover");
+
+        return Request.post(
+            `https://api.bilibili.com/x/upload/web/image?csrf=${this.credential.csfr}`,
+            form,
+            this.credential
+        ).then(res => res.data);
+    }
+    
+    async updateCover(cover: string | ReadStream, ): Promise<boolean> {
+        if (!this.credential.info.liveroom) throw "房间号未知";
+        const img_url = (await this._uploadCover(cover)).location;
+
+        return Request.post(
+            "https://api.live.bilibili.com/room/v1/Cover/new_replace_cover",
+            {
+                room_id: this.credential.info.liveroom.roomid,
+                url: img_url,
+                pic_id: 1000000 + Math.random() * 100000,  // 好像不太妙
+                type: "cover",
+                csrf: this.credential.csfr,
+                csrf_token: this.credential.csfr,
+                visit_id: ""
+            },
+            this.credential
+        ).then(res => res.data);
     }
 }

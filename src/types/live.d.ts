@@ -82,3 +82,8 @@ interface SrtAddr {
     addr: string;  // str链接
     code: string;
 }
+
+export interface UploadCoverResp {
+    etag:     string;
+    location: string;
+}
