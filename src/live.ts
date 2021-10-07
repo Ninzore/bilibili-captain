@@ -5,7 +5,8 @@ import {readFile} from "./utils";
 import {BiliCredential} from "./biliCredential";
 import {SignResp, LiveUserInfoResp, 
     StartLiveResp, StopLiveResp, StreamAddrResp,
-    UploadCoverResp} from "./types/live";
+    UploadCoverResp,
+    BaseInfoResp, RoomInfoResp} from "./types/live";
 
 export class Live {
     private credential: BiliCredential;
@@ -216,6 +217,31 @@ export class Live {
                 visit_id: ""
             },
             this.credential
+        ).then(res => res.data);
+    }
+
+    static async getRoomBaseInfo(id: number, id_type: "uid" | "roomid"): Promise<BaseInfoResp> {
+        return Request.get(
+            "https://api.live.bilibili.com/xlive/web-room/v1/index/getRoomBaseInfo",
+            {
+                [id_type === "uid" ? "uids" : "room_ids"] : id,
+                req_biz: "space"
+            }
+        ).then(res => {
+            const values = Object.values(
+                id_type === "uid" ? res.data.by_uids : res.data.by_room_ids)[0];
+            if (!values) throw "没有这个房间号";
+            else return values as BaseInfoResp;
+        });
+    }
+
+    static async getRoomInfo(room_id: number): Promise<RoomInfoResp> {
+        return Request.get(
+            "https://api.live.bilibili.com/room/v1/Room/get_info",
+            {
+                room_id,
+                from: "space"
+            }
         ).then(res => res.data);
     }
 }
