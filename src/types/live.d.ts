@@ -174,3 +174,42 @@ export interface BaseInfoResp {
     join_slide:       number;
     live_id:          number;
 }
+
+export interface LiveTagsResp {
+    id:   number;
+    name: AreaName;
+    list: List[];
+}
+
+interface List {
+    id:                string;
+    parent_id:         string;
+    old_area_id:       string;
+    name:              string;
+    act_id:            string;
+    pk_status:         string;
+    hot_status:        number;
+    lock_status:       string;
+    pic:               string;
+    complex_area_name: ComplexAreaName;
+    parent_name:       Name;
+    area_type:         number;
+    cate_id?:          string;
+}
+
+enum ComplexAreaName {
+    Empty = "",
+    影音館 = "影音館",
+    視頻唱見 = "視頻唱見",
+}
+
+enum AreaName {
+    单机游戏 = "单机游戏",
+    娱乐 = "娱乐",
+    学习 = "学习",
+    手游 = "手游",
+    生活 = "生活",
+    电台 = "电台",
+    网游 = "网游",
+    虚拟主播 = "虚拟主播",
+}

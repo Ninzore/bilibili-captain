@@ -5,7 +5,7 @@ import {readFile} from "./utils";
 import {BiliCredential} from "./biliCredential";
 import {SignResp, LiveUserInfoResp, 
     StartLiveResp, StopLiveResp, StreamAddrResp,
-    UploadCoverResp,
+    UploadCoverResp, LiveTagsResp,
     BaseInfoResp, RoomInfoResp} from "./types/live";
 
 export class Live {
@@ -220,6 +220,12 @@ export class Live {
         ).then(res => res.data);
     }
 
+    /**
+     * 获取房间信息
+     * @param id 房间号或主播id
+     * @param id_type id类型为uid或roomid
+     * @returns 
+     */
     static async getRoomBaseInfo(id: number, id_type: "uid" | "roomid"): Promise<BaseInfoResp> {
         return Request.get(
             "https://api.live.bilibili.com/xlive/web-room/v1/index/getRoomBaseInfo",
@@ -235,6 +241,11 @@ export class Live {
         });
     }
 
+    /**
+     * 获取房间更详细信息
+     * @param room_id 房间号
+     * @returns 
+     */
     static async getRoomInfo(room_id: number): Promise<RoomInfoResp> {
         return Request.get(
             "https://api.live.bilibili.com/room/v1/Room/get_info",
@@ -242,6 +253,16 @@ export class Live {
                 room_id,
                 from: "space"
             }
+        ).then(res => res.data);
+    }
+
+    /**
+     * 获取直播分区列表
+     * @returns 
+     */
+    static async getAreaList(): Promise<LiveTagsResp> {
+        return Request.get(
+            "http://api.live.bilibili.com/room/v1/Area/getList",
         ).then(res => res.data);
     }
 }
