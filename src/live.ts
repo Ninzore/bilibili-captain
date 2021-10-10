@@ -8,6 +8,9 @@ import {SignResp, LiveUserInfoResp,
     UploadCoverResp, LiveTagsResp,
     BaseInfoResp, RoomInfoResp} from "./types/live";
 
+/**
+ * 直播间相关
+ */
 export class Live {
     private credential: BiliCredential;
 

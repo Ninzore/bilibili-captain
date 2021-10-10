@@ -6,6 +6,9 @@ import {CreateResponse, RepostResponse, DynamiDetail,
 import {Request} from "./request";
 import {Common} from "./common";
 
+/**
+ * 动态
+ */
 export class Dynamic {
     private credential: BiliCredential;
 

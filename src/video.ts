@@ -4,6 +4,9 @@ import { StatResponse, PageListReturn, VideoDetail, TripleResponse } from "./typ
 import {Common} from "./common";
 import {Comment} from "./comment";
 
+/**
+ * 视频
+ */
 export class Video {
     private credential: BiliCredential;
     public comment!: Comment;

@@ -2,6 +2,9 @@ import {BiliCredential} from "./biliCredential";
 import {Request} from "./request";
 import {UserInfo, MyInfoResp, UserInfoFromSearch, BatchUserInfosResp} from "./types/user";
 
+/**
+ * 用户
+ */
 export class User {
     private credential: BiliCredential;
 

@@ -6,6 +6,9 @@ import {UnreadMsgCountResp, UnreadPrivateMsgCountResp,
     ReplyMsgResp, LikeResp, SysMsgResp, MsgBoxResp,
     MessageFromResp, SendMsgResp} from "./types/message";
 
+/**
+ * 收件箱
+ */
 export class Message {
     private credential;
 

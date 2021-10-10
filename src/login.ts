@@ -4,15 +4,27 @@ import {Request} from "./request";
 import {BiliCredential} from "./biliCredential";
 import {GetQRResp} from "./types/login";
 
+/**
+ * 登录
+ */
 export class Login {
     constructor() {}
 
+    /**
+     * 获取二维码链接
+     * @returns 
+     */
     private static async _getQRcode(): Promise<GetQRResp> {
         return Request.get(
             "http://passport.bilibili.com/qrcode/getLoginUrl"
         ).then(res => res.data);
     }
 
+    /**
+     * 进行扫码登录
+     * @param oauthKey 扫码登录秘钥
+     * @returns 
+     */
     private static async _getQRloginInfo(oauthKey: string): Promise<any> {
         return Request.post(
             "http://passport.bilibili.com/qrcode/getLoginInfo",
@@ -20,6 +32,10 @@ export class Login {
         );
     }
 
+    /**
+     * 扫码登录
+     * @returns 
+     */
     static async loginQR(): Promise<BiliCredential> {
         const qr_info = await this._getQRcode();
         console.log("打开手机进行扫码，请在10秒内完成", qrcode.generate(qr_info.url, {small: true}));

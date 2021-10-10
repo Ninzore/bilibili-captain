@@ -17,6 +17,9 @@ const PATH2BTYPE: Obj = {
     read: 2
 }
 
+/**
+ * 共通
+ */
 export class Common {
     /**
      * 处理at

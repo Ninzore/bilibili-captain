@@ -3,6 +3,9 @@ import {Request} from "./request";
 import {Btype} from "./types/common";
 import {AddResponse, SortBy, ListResponse, CommonResponse} from "./types/comment";
 
+/**
+ * 评论区
+ */
 export class Comment {
     private credential: BiliCredential;
 
