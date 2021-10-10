@@ -96,6 +96,11 @@
   "resolved" "https://registry.npmjs.org/object-inspect/-/object-inspect-1.11.0.tgz"
   "version" "1.11.0"
 
+"qrcode-terminal@^0.12.0":
+  "integrity" "sha512-EXtzRZmC+YGmGlDFbXKxQiMZNwCLEO6BANKXG4iCtSIM0yqc/pappSx3RIKr4r0uh5JsBckOXeKrB3Iz7mdQpQ=="
+  "resolved" "https://registry.npmjs.org/qrcode-terminal/-/qrcode-terminal-0.12.0.tgz"
+  "version" "0.12.0"
+
 "qs@^6.10.1":
   "integrity" "sha512-M528Hph6wsSVOBiYUnGf+K/7w0hNshs/duGsNXPUCLH5XAqjEtiPGwNONLV0tBH8NoGb0mvD5JubnUTrujKDTg=="
   "resolved" "https://registry.npmjs.org/qs/-/qs-6.10.1.tgz"
