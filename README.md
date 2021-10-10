@@ -4,7 +4,21 @@
 用来操作B站的一些功能。基本来自于web端接口。
 提供接口的返回值类型（还是比较可靠的
 
+### Usage
+```typescript
+import {BiliCapt} from "bilicaptain";
+BiliCapt.Live ...
+
+or
+
+import {Live, User, Login, Video, 
+Comment, Dynamic, Request, Message, BiliCredential} from "bilicaptain";
+```
+
 ### 目前支持
+#### 登录
+目前可以扫码登录或手动输入cookie信息
+
 #### 动态
 1. 发送，删除，定时动态（包含文字/图片/投票动态）
 2. 获取未发布定时动态，提前发布，删除
@@ -49,3 +63,5 @@
 4. 获取/刷新推流地址
 5. 修改主播公告
 6. 修改直播间标题，简介，tag
+7. 修改直播封面
+8. 查看分区列表

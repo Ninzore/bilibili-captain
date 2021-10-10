@@ -1,8 +1,9 @@
 {
-  "name": "biliCaptain",
+  "name": "bilicaptain",
   "version": "0.5.0",
   "description": "",
-  "main": "index.js",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsc"
   },
