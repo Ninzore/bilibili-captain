@@ -1,6 +1,13 @@
 # Changelog
 
-## [0.5.1] - 2021-10-10
+## [0.5.2] - 2021-10-12
+### Feat
+* 轮询扫码结果直到结束
+
+### Chore
+* 不再依赖 qrcode-terminal，转向 qrcode
+
+## [0.5.1] - 2021-10-11
 ### Change
 * 不再导出 Request
 
