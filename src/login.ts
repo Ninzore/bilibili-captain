@@ -41,14 +41,15 @@ export class Login {
      * 输出QRcode渲染结果
      * @param output 选择输出形式
      */
-    static async renderQR(text: string, output: "buffer"): Promise<Buffer>
-    static async renderQR(text: string, output: "string"): Promise<string>
-    static async renderQR(text: string, output: "terminal"): Promise<void>
-    static async renderQR(text: string, output: "terminal" | "string" | "buffer"): Promise<void | string | Buffer> {
+    private static async _renderQR(
+        text: string,
+        output: "terminal" | "string" | "buffer")
+    : Promise<void | string | Buffer> {
         switch (output) {
             case "string": return qrcode.toString(text);
             case "buffer": return qrcode.toBuffer(text);
             case "terminal": {
+                console.log("打开手机进行扫码，请在3分钟内完成");
                 console.log(await qrcode.toString(text));
                 return;
             }
@@ -59,43 +60,42 @@ export class Login {
      * 扫码登录
      * @returns 
      */
-    static async loginQR(): Promise<BiliCredential> {
+    static async loginQR(
+        output: "url" | "terminal" | "string" | "buffer" = "buffer",
+        callback: (credential: BiliCredential) => any
+    ): Promise<GetQRResp | string | void | Buffer> {
         const qr_info = await this._getQRcode();
-        console.log("打开手机进行扫码，请在3分钟内完成");
-        Login.renderQR(qr_info.url, "terminal");
 
-        return new Promise(resolve => {
-            let count_down = 60;
-
-            const polling = setTimeout(async (count_down) => {
-                const res = await this._getQRloginInfo(qr_info.oauthKey);
-                
-                if (res.url) {
-                    clearInterval(polling);
-                    const params = new URL(res.url).searchParams;
-                    const sessdata = params.get("SESSDATA");
-                    const bili_jct = params.get("bili_jct");
-                    if (!sessdata) throw "未取得SESSDATA";
-                    if (!bili_jct) throw "未取得bili_jct";
-                    console.log("已完成扫码登录");
-                    resolve(new BiliCredential(sessdata, bili_jct));
-                }
+        let count_down = 60;
+        const polling = setTimeout(async (count_down) => {
+            const res = await this._getQRloginInfo(qr_info.oauthKey);
+            
+            if (res.url) {
+                clearInterval(polling);
+                const params = new URL(res.url).searchParams;
+                const sessdata = params.get("SESSDATA");
+                const bili_jct = params.get("bili_jct");
+                if (!sessdata) throw "未取得SESSDATA";
+                if (!bili_jct) throw "未取得bili_jct";
+                console.log("已完成扫码登录");
+                callback(new BiliCredential(sessdata, bili_jct));
+            }
+            else {
+                count_down --;
+                if (count_down > 0) polling.refresh();
                 else {
-                    count_down --;
-
-                    if (count_down > 0) polling.refresh();
-                    else {
-                        switch (res.data) {
-                            case -1: throw "秘钥错误";
-                            case -2: throw "密钥超时";
-                            case -4: throw "未扫描";
-                            case -5: throw "未确认";
-                            default: throw "未知错误";
-                        }
+                    switch (res.data) {
+                        case -1: throw "秘钥错误";
+                        case -2: throw "密钥超时";
+                        case -4: throw "未扫描";
+                        case -5: throw "未确认";
+                        default: throw "未知错误";
                     }
                 }
-                
-            }, 3000, count_down);
-        });
+            }
+        }, 3000, count_down);
+
+        if (output == "url") return qr_info;
+        return Login._renderQR(qr_info.url, output);
     }
 }
