@@ -9,7 +9,10 @@ interface Info extends MyInfoResp {
  * 保存各种凭据
  */
 export class BiliCredential {
-    public cookie: Object;
+    public cookie: {
+        sessdata: string;
+        bili_jct: string;
+    };
     public cookie_str: string;
     public csfr: string;
     public dev_id: string;
@@ -17,12 +20,12 @@ export class BiliCredential {
     public info!: Info;
 
     /**
-     * 
      * @param sessdata 必要
      * @param bili_jct 必要
+     * @param dev_id device id，不传的话会自动生成
      */
-    constructor(sessdata: string, bili_jct: string) {
-        this.cookie = {"SESSDATA": sessdata, bili_jct};
+    constructor(sessdata: string, bili_jct: string, dev_id?: string) {
+        this.cookie = {sessdata, bili_jct};
         this.csfr = bili_jct;
 
         let tmp = [];
@@ -30,7 +33,12 @@ export class BiliCredential {
             tmp.push(`${k}=${v}`);
         }
         this.cookie_str = tmp.join("; ");
-        this.dev_id = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (name => {
+
+        if (dev_id 
+            && !/[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[\da-f]{4}-[\da-f]{12}/.test(dev_id)
+        ) throw "dev_id 不符合规范，参考https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/message/private_msg.md"; 
+        this.dev_id = dev_id ? dev_id
+        : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (name => {
             let randomInt = 16 * Math.random() | 0;
             return ("x" === name ? randomInt : 3 & randomInt | 8).toString(16).toUpperCase();
         }));
