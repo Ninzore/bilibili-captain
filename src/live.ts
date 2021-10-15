@@ -1,5 +1,5 @@
-import FormData from "form-data";
 import {ReadStream} from "fs-extra"
+import * as FormData from "form-data";
 import {Request} from "./request";
 import {readFile} from "./utils";
 import {BiliCredential} from "./biliCredential";
@@ -189,7 +189,12 @@ export class Live {
         return this._update(tag, add_del ? "add_tag" : "del_tag");
     }
 
-    private async _uploadCover(cover: string | ReadStream): Promise<UploadCoverResp> {
+    /**
+     * 上传封面
+     * @param cover 封面链接/buffer/stream
+     * @returns 
+     */
+    private async _uploadCover(cover: string | Buffer | ReadStream): Promise<UploadCoverResp> {
         if (typeof cover === "string") cover = await readFile(cover);
         
         let form = new FormData();
@@ -204,6 +209,12 @@ export class Live {
         ).then(res => res.data);
     }
     
+    /**
+     * 修改封面
+     * @param cover 图片，最小为960*540 (16:9)，颜值区封面为500*500
+     * @param cover_type 普通直播 = cover， 颜值区 = show，默认为普通
+     * @returns 
+     */
     async updateCover(cover: string | ReadStream, ): Promise<boolean> {
         if (!this.credential.info.liveroom) throw "房间号未知";
         const img_url = (await this._uploadCover(cover)).location;
