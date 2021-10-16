@@ -5,7 +5,7 @@ import {readFile} from "./utils";
 import {BiliCredential} from "./biliCredential";
 import {SignResp, LiveUserInfoResp, 
     StartLiveResp, StopLiveResp, StreamAddrResp,
-    UploadCoverResp, LiveTagsResp,
+    UploadCoverResp, LiveTagsResp, GetCoverListResp,
     BaseInfoResp, RoomInfoResp} from "./types/live";
 
 /**
@@ -209,6 +209,37 @@ export class Live {
         ).then(res => res.data);
     }
     
+    /**
+     * 获取最新上传的封面状态，推荐用在updateCover后
+     * @returns 
+     */
+     async getNewCover(): Promise<GetCoverListResp> {
+        if (!this.credential.info.liveroom) throw "未能获取直播间信息";
+
+        return Request.get(
+            "https://api.live.bilibili.com/room/v1/Cover/new_get_list",
+            {room_id: this.credential.info.liveroom.roomid},
+            this.credential
+        ).then(res => res.data[0]);
+    }
+
+    /**
+     * 获取自己直播间的封面列表
+     * @returns 其中audit_status 判断是否过审，0=审核中，1=已过审，-1=没过审
+     */
+    async getCoverList(): Promise<GetCoverListResp[]> {
+        if (!this.credential.info.liveroom) throw "未能获取直播间信息";
+        
+        return Request.get(
+            "https://api.live.bilibili.com/room/v1/Cover/get_list",
+            {
+                room_id: this.credential.info.liveroom?.roomid,
+                type: "all_cover"
+            },
+            this.credential
+        ).then(res => res.data);
+    }
+
     /**
      * 修改封面
      * @param cover 图片，最小为960*540 (16:9)，颜值区封面为500*500

@@ -213,3 +213,12 @@ enum AreaName {
     网游 = "网游",
     虚拟主播 = "虚拟主播",
 }
+
+export interface GetCoverListResp {
+    id:            number;
+    audit_status:  number;
+    audit_reason:  string;
+    url:           string;
+    select_status: number;
+    type:          string;
+}
