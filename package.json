@@ -1,6 +1,6 @@
 {
   "name": "bilicaptain",
-  "version": "0.5.4",
+  "version": "0.5.7",
   "description": "A TypeScript Bilibili API client interface",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
