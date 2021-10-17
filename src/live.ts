@@ -213,7 +213,7 @@ export class Live {
      * 获取最新上传的封面状态，推荐用在updateCover后
      * @returns 
      */
-     async getNewCover(): Promise<GetCoverListResp> {
+    async getNewCover(): Promise<GetCoverListResp> {
         if (!this.credential.info.liveroom) throw "未能获取直播间信息";
 
         return Request.get(
@@ -246,23 +246,34 @@ export class Live {
      * @param cover_type 普通直播 = cover， 颜值区 = show，默认为普通
      * @returns 
      */
-    async updateCover(cover: string | ReadStream, ): Promise<boolean> {
+    async updateCover(cover: string | Buffer | ReadStream, cover_type: "cover" | "show" = "cover"): Promise<boolean> {
         if (!this.credential.info.liveroom) throw "房间号未知";
-        const img_url = (await this._uploadCover(cover)).location;
 
+        const covers = await this.getCoverList();
+        let pic_id = 0;
+        for (const cover of covers) {
+            if (cover.type == cover_type) pic_id = cover.id;
+        }
+        if (pic_id === 0) throw "目前没有直播封面无法替换";
+
+        const img_url = (await this._uploadCover(cover)).location;
+        
+        // addCoverApi = /room/v1/Cover/add  添加封面
         return Request.post(
-            "https://api.live.bilibili.com/room/v1/Cover/new_replace_cover",
+            cover_type == "cover"
+            ? "https://api.live.bilibili.com/room/v1/Cover/new_replace_cover"  // 普通直播
+            : "https://api.live.bilibili.com/room/v1/Cover/replace",  //  颜值区
             {
                 room_id: this.credential.info.liveroom.roomid,
                 url: img_url,
-                pic_id: 1000000 + Math.random() * 100000,  // 好像不太妙
-                type: "cover",
+                pic_id,
+                type: cover_type,
                 csrf: this.credential.csfr,
                 csrf_token: this.credential.csfr,
                 visit_id: ""
             },
             this.credential
-        ).then(res => res.data);
+        ).then(res => res.data.code === 0);
     }
 
     /**
