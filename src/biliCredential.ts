@@ -1,5 +1,5 @@
 import {User} from "./user";
-import {MyInfoResp, LiveRoom} from "./types/user"
+import {MyInfoResp, LiveRoom} from "./types/user";
 
 interface Info extends MyInfoResp {
     liveroom?: LiveRoom;
