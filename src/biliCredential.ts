@@ -10,7 +10,7 @@ interface Info extends MyInfoResp {
  */
 export class BiliCredential {
     public cookie: {
-        sessdata: string;
+        SESSDATA: string;
         bili_jct: string;
     };
     public cookie_str: string;
@@ -20,12 +20,12 @@ export class BiliCredential {
     public info!: Info;
 
     /**
-     * @param sessdata 必要
+     * @param SESSDATA 必要
      * @param bili_jct 必要
      * @param dev_id device id，不传的话会自动生成
      */
-    constructor(sessdata: string, bili_jct: string, dev_id?: string) {
-        this.cookie = {sessdata, bili_jct};
+    constructor(SESSDATA: string, bili_jct: string, dev_id?: string) {
+        this.cookie = {SESSDATA, bili_jct};
         this.csfr = bili_jct;
 
         let tmp = [];
@@ -54,8 +54,8 @@ export class BiliCredential {
                 console.error("自动获取直播间id失败");
                 this.info.liveroom = undefined;
             });
-        }).catch(() => {
-            console.error("自动获取mid失败");
+        }).catch((err) => {
+            console.error("自动获取mid失败", err);
             this.uid = 0;
         });
     }
