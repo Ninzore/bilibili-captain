@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.5.8] - 2021-10-18
+### Feat
+* Fix: sessdata -> SESSDATA
+
 ## [0.5.7] - 2021-10-17
 ### Feat
 * Fix: 上传直播封面失败
