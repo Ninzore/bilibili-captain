@@ -205,12 +205,12 @@ export class Dynamic {
      * 获取尚未发布的定时动态列表
      * @returns 
      */
-    async getDrafts(): Promise<GetDraftsResponse> {
+    async getDrafts(): Promise<GetDraftsResponse[]> {
         return Request.get(
             "https://api.vc.bilibili.com/dynamic_draft/v1/dynamic_draft/get_drafts",
             {},
             this.credential
-        ).then(res =>  res.data);
+        ).then(res =>  res.data.drafts);
     }
 
     /**

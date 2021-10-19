@@ -30,11 +30,6 @@ export interface RmDraftResponse {
 }
 
 export interface GetDraftsResponse {
-    drafts: Draft[];
-    _gt_:   number;
-}
-
-interface GetDraftsResponse {
     draft_id:       number;
     uid:            number;
     type:           number;
