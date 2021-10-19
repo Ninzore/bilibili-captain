@@ -35,7 +35,7 @@ export class BiliCredential {
         this.cookie_str = tmp.join("; ");
 
         if (dev_id 
-            && !/[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[\da-f]{4}-[\da-f]{12}/.test(dev_id)
+            && !/[\dA-F]{8}-[\dA-F]{4}-4[\dA-F]{3}-[\dA-F]{4}-[\dA-F]{12}/.test(dev_id)
         ) throw "dev_id 不符合规范，参考https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/message/private_msg.md"; 
         this.dev_id = dev_id ? dev_id
         : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (name => {
