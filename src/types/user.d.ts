@@ -347,7 +347,7 @@ export interface BatchUserInfosResp {
     face:            string;
 }
 
-enum Level {
+export enum Level {
     Empty = "",
     普通勋章 = "普通勋章",
     稀有勋章 = "稀有勋章",
