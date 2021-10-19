@@ -1,24 +1,31 @@
 # Changelog
 
+## [0.5.9] - 2021-10-19
+### Fix
+* GetDraftsResponse接口错误
+* 没传cookie
+* add export to enum
+* 大小写不对
+
 ## [0.5.8] - 2021-10-18
 ### Feat
-* Fix: sessdata -> SESSDATA
+* sessdata -> SESSDATA
 
 ## [0.5.7] - 2021-10-17
 ### Feat
-* Fix: 上传直播封面失败
+* 上传直播封面失败
 
 ## [0.5.6] - 2021-10-16
 ### Feat
-* Feat: 获取自己直播间的封面
+* 获取自己直播间的封面
 
 ## [0.5.5] - 2021-10-15
 ### Feat
-* Doc: 增加一些说明
+* 增加一些说明
 
 ## [0.5.4] - 2021-10-14
 ### Feat
-* Feat: 初始化credential时可以接受dev_id
+* 初始化credential时可以接受dev_id
 
 ## [0.5.3] - 2021-10-13
 ### Feat
