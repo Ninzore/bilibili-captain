@@ -2,7 +2,7 @@ import fs from "fs-extra";
 import {BiliCredential} from "./biliCredential";
 import {Request} from "./request";
 import {Common} from "./common";
-import {UnreadMsgCountResp, UnreadPrivateMsgCountResp, 
+import {UnreadMsgFeedResp, UnreadPrivateMsgCountResp, 
     ReplyMsgResp, LikeResp, SysMsgResp, MsgBoxResp,
     MessageFromResp, SendMsgResp} from "./types/message";
 
@@ -20,13 +20,13 @@ export class Message {
      * 获取未读消息数量
      * @returns 
      */
-     async unreadMsgCount(): Promise<UnreadMsgCountResp> {
+    async unreadMsgFeed(): Promise<UnreadMsgFeedResp> {
         return Request.get(
             "https://api.bilibili.com/x/msgfeed/unread",
             {
                 build: 0,
                 mobi_app: "web"
-            }
+            }, this.credential
         ).then(res => {return res.data;});
     }
 

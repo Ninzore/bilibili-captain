@@ -1,9 +1,12 @@
-export interface UnreadMsgCountResp {
-    code:    number;
-    message: string;
-    ttl:     number;
-    data:    Data;
+export interface UnreadMsgFeedResp {
+    at:      number;
+    chat:    number;
+    like:    number;
+    reply:   number;
+    sys_msg: number;
+    up:      number;
 }
+
 
 interface UnreadMsgCountData {
     at:      number;
