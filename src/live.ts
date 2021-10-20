@@ -5,7 +5,7 @@ import {readFile} from "./utils";
 import {BiliCredential} from "./biliCredential";
 import {SignResp, LiveUserInfoResp, 
     StartLiveResp, StopLiveResp, StreamAddrResp,
-    UploadCoverResp, LiveTagsResp, GetCoverListResp,
+    UploadCoverResp, LiveAreaListResp, GetCoverListResp,
     BaseInfoResp, RoomInfoResp} from "./types/live";
 
 /**
@@ -316,7 +316,7 @@ export class Live {
      * 获取直播分区列表
      * @returns 
      */
-    static async getAreaList(): Promise<LiveTagsResp> {
+    static async getAreaList(): Promise<LiveAreaListResp[]> {
         return Request.get(
             "http://api.live.bilibili.com/room/v1/Area/getList",
         ).then(res => res.data);

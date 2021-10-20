@@ -175,13 +175,13 @@ export interface BaseInfoResp {
     live_id:          number;
 }
 
-export interface LiveTagsResp {
+export interface LiveAreaListResp {
     id:   number;
     name: AreaName;
-    list: List[];
+    list: SubArea[];
 }
 
-interface List {
+interface SubArea {
     id:                string;
     parent_id:         string;
     old_area_id:       string;
@@ -197,13 +197,13 @@ interface List {
     cate_id?:          string;
 }
 
-enum ComplexAreaName {
+export enum ComplexAreaName {
     Empty = "",
     影音館 = "影音館",
     視頻唱見 = "視頻唱見",
 }
 
-enum AreaName {
+export enum AreaName {
     单机游戏 = "单机游戏",
     娱乐 = "娱乐",
     学习 = "学习",
