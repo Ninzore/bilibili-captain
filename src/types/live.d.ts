@@ -192,7 +192,7 @@ interface SubArea {
     lock_status:       string;
     pic:               string;
     complex_area_name: ComplexAreaName;
-    parent_name:       Name;
+    parent_name:       AreaName;
     area_type:         number;
     cate_id?:          string;
 }
@@ -204,14 +204,16 @@ export enum ComplexAreaName {
 }
 
 export enum AreaName {
+    网游 = "网游",
+    手游 = "手游",
     单机游戏 = "单机游戏",
     娱乐 = "娱乐",
-    学习 = "学习",
-    手游 = "手游",
-    生活 = "生活",
     电台 = "电台",
-    网游 = "网游",
     虚拟主播 = "虚拟主播",
+    生活 = "生活",
+    学习 = "学习",
+    赛事 = "赛事",
+    大事件 = "大事件"
 }
 
 export interface GetCoverListResp {
