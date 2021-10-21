@@ -17,16 +17,7 @@ interface UnreadMsgCountData {
     up:      number;
 }
 
-
 export interface UnreadPrivateMsgCountResp {
-    code:    number;
-    msg:     string;
-    message: string;
-    ttl:     number;
-    data:    UnreadMessageCountData;
-}
-
-interface UnreadPrivateMsgCountData {
     unfollow_unread:   number;
     follow_unread:     number;
     unfollow_push_msg: number;
@@ -125,13 +116,13 @@ interface LikeItemItem {
     ctime:             number;
 }
 
-enum Business {
+export enum Business {
     动态 = "动态",
     弹幕 = "弹幕",
     评论 = "评论",
 }
 
-enum LikeType {
+export enum LikeType {
     Album = "album",
     Danmu = "danmu",
     Dynamic = "dynamic",
