@@ -94,7 +94,7 @@ export interface PreJudgeResp {
     upload_size:         number;
     lottery_right:       number;
     clip_time_threshold: number;
-    user_profile:        UserProfile;
+    user_profile:        UserProfile2;
     prejudge_json:       string;
     verify_first:        number;
     clip_published_user: number;
@@ -133,7 +133,7 @@ interface UpControlReserve {
     jump_url:   string;
 }
 
-interface UserProfile {
+interface UserProfile2 {
     info:    { uid: number; };
     pendant: Pendant;
 }
