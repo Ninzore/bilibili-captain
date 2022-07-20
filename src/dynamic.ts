@@ -21,11 +21,11 @@ export class Dynamic {
      * @param dynamic_id 动态id
      * @returns 
      */
-     static async detail(dynamic_id: string): Promise<DynamiDetail> {
+    static async detail(dynamic_id: string): Promise<DynamiDetail> {
         return Request.get(
             "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail",
             {dynamic_id}
-        );
+        ).then(res => res.data);
     }
     
     /**
@@ -243,7 +243,7 @@ export class Dynamic {
                 csrf_token: this.credential.csfr
             },
             this.credential
-        );
+        ).then(res => res.data);
     }
 
     /**
