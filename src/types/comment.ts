@@ -111,7 +111,7 @@ export interface Reply {
     reply_control: ReplyControl;
 }
 
-interface Content {
+export interface Content {
     message:  string;
     plat:     number;
     device:   string;
