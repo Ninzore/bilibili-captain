@@ -1,12 +1,12 @@
 import {Member, ContentMember} from "./user";
 
-declare const enum SortBy {
+export const enum SortBy {
     time,
     like,
     replyNum
 }
 
-interface AddResponse {
+export interface AddResponse {
     success_action:  number;
     success_toast:   string;
     need_captcha:    boolean;
