@@ -18,6 +18,7 @@ export class BiliCredential {
     public dev_id: string;
     public uid!: number;
     public info!: Info;
+    public valid: Boolean;
 
     /**
      * @param SESSDATA 必要
@@ -27,6 +28,7 @@ export class BiliCredential {
     constructor(SESSDATA: string, bili_jct: string, dev_id?: string) {
         this.cookie = {SESSDATA, bili_jct};
         this.csfr = bili_jct;
+        this.valid = false;
 
         let tmp = [];
         for (let [k, v] of Object.entries(this.cookie)) {
@@ -46,6 +48,7 @@ export class BiliCredential {
         User.myInfo(this).then(res => {
             this.uid = res.mid;
             this.info = res;
+            this.valid = true;
 
             User.info(this.uid).then(res => {
                 this.info.liveroom = 
@@ -55,8 +58,9 @@ export class BiliCredential {
                 this.info.liveroom = undefined;
             });
         }).catch((err) => {
-            console.error("自动获取mid失败", err);
+            console.error("登录失效", err);
             this.uid = 0;
+            this.valid = false;
         });
     }
 }
