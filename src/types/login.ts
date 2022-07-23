@@ -3,7 +3,12 @@ export interface GetQRResp {
     oauthKey: string;
 }
 
-export interface GetLoginInfoResp {
-    data: -1 | -2 | -4 | -5;
+export interface GetLoginInfoSuccResp {
     url: string;
+    refresh_token: string;
+    timestamp: number;
+}
+
+export interface GetLoginInfoFailResp {
+    data: -1 | -2 | -4 | -5;
 }

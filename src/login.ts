@@ -2,7 +2,7 @@ import {URL} from "url";
 import * as qrcode from "qrcode";
 import {Request} from "./request";
 import {BiliCredential} from "./biliCredential";
-import {GetQRResp, GetLoginInfoResp} from "./types/login";
+import {GetQRResp, GetLoginInfoSuccResp, GetLoginInfoFailResp} from "./types/login";
 
 /**
  * 登录
@@ -25,7 +25,8 @@ export class Login {
      * @param oauthKey 扫码登录秘钥
      * @returns 
      */
-    private static async _getQRloginInfo(oauthKey: string): Promise<GetLoginInfoResp> {
+    private static async _getQRloginInfo(oauthKey: string)
+    : Promise<GetLoginInfoSuccResp | GetLoginInfoFailResp> {
         return Request.post(
             "http://passport.bilibili.com/qrcode/getLoginInfo",
             {oauthKey}
@@ -70,7 +71,7 @@ export class Login {
         const polling = setTimeout(async (count_down) => {
             const res = await this._getQRloginInfo(qr_info.oauthKey);
             
-            if (res.url) {
+            if ("url" in res) {
                 clearInterval(polling);
                 const params = new URL(res.url).searchParams;
                 const sessdata = params.get("SESSDATA");
