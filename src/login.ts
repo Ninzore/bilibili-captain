@@ -76,10 +76,14 @@ export class Login {
                 const params = new URL(res.url).searchParams;
                 const sessdata = params.get("SESSDATA");
                 const bili_jct = params.get("bili_jct");
+                const uid = parseInt(params.get("DedeUserID") as string);
+                const dedeUserID__ckMd5 = params.get("DedeUserID__ckMd5") as string;
+                const refreshToken = res.refresh_token;
                 if (!sessdata) throw "未取得SESSDATA";
                 if (!bili_jct) throw "未取得bili_jct";
-                console.log("已完成扫码登录");
-                callback(new BiliCredential(sessdata, bili_jct));
+                console.log(uid, "已完成扫码登录");
+                callback(new BiliCredential(sessdata, bili_jct,
+                {uid, refreshToken, dedeUserID__ckMd5, timestamp: res.timestamp}));
             }
             else {
                 count_down --;
