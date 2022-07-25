@@ -50,7 +50,7 @@ export class Live {
         if (!roomid && !this.credential.info.liveroom?.roomid) throw "未能获取自己的房间号";
 
         return Request.post(
-            "http://api.live.bilibili.com/room/v1/Room/startLive",
+            "https://api.live.bilibili.com/room/v1/Room/startLive",
             {
                 room_id: roomid || this.credential.info.liveroom?.roomid,
                 platform: "pc",
@@ -318,7 +318,7 @@ export class Live {
      */
     static async getAreaList(): Promise<LiveAreaListResp[]> {
         return Request.get(
-            "http://api.live.bilibili.com/room/v1/Area/getList",
+            "https://api.live.bilibili.com/room/v1/Area/getList",
         ).then(res => res.data);
     }
 }
