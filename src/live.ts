@@ -91,7 +91,7 @@ export class Live {
         return Request.get(
             "https://api.live.bilibili.com/xlive/app-blink/v1/live/getWebUpStreamAddr",
             {
-                platform: "web",
+                platform: "pc",
                 reset_key
             },
             this.credential
