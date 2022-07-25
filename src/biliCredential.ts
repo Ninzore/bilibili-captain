@@ -58,14 +58,13 @@ export class BiliCredential {
         }
     }
 
-    validCredit() {
-        User.myInfo(this).then(res => {
-            console.log("info collected");
+    async validCredit() {
+        return User.myInfo(this).then(async res => {
             if (!this.uid) this.uid = res.mid;
             this.info = res;
             this.valid = true;
 
-            User.info(this.uid).then(res => {
+            await User.info(this.uid).then(res => {
                 this.info.liveroom = res.live_room.roomStatus === 0 
                 ? undefined : res.live_room;
             }).catch(() => {
