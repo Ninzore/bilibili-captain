@@ -36,7 +36,7 @@ export class Message {
      */
     async unreadPrivateMsgCount(): Promise<UnreadPrivateMsgCountResp> {
         return Request.get(
-            "http://api.vc.bilibili.com/session_svr/v1/session_svr/single_unread",
+            "https://api.vc.bilibili.com/session_svr/v1/session_svr/single_unread",
             {
                 unread_type: 0,
                 build: 0,

@@ -16,7 +16,7 @@ export class Login {
      */
     private static async _getQRcode(): Promise<GetQRResp> {
         return Request.get(
-            "http://passport.bilibili.com/qrcode/getLoginUrl"
+            "https://passport.bilibili.com/qrcode/getLoginUrl"
         ).then(res => res.data);
     }
 
@@ -28,7 +28,7 @@ export class Login {
     private static async _getQRloginInfo(oauthKey: string)
     : Promise<GetLoginInfoSuccResp | GetLoginInfoFailResp> {
         return Request.post(
-            "http://passport.bilibili.com/qrcode/getLoginInfo",
+            "https://passport.bilibili.com/qrcode/getLoginInfo",
             {oauthKey}
         )
         .then(res => res.data)
