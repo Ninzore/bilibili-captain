@@ -27,6 +27,8 @@ export interface UserInfo {
     profession:       Profession;
     tags:             null;
     series:           Series;
+    elec:             Elec;
+    mcn_info:         any;
 }
 
 export interface MyInfoResp {
@@ -110,6 +112,17 @@ export interface LiveRoom {
     roomid:         number;
     roundStatus:    number;
     broadcast_type: number;
+    watched_show:   WatchedShow;
+}
+
+export interface WatchedShow {
+    switch:        boolean;
+    num:           number;
+    text_small:    string;
+    text_large:    string;
+    icon:          string;
+    icon_location: string;
+    icon_web:      string;
 }
 
 interface Official {
@@ -130,6 +143,18 @@ interface Profession {
 interface Series {
     user_upgrade_status: number;
     show_upgrade_window: boolean;
+}
+
+export interface Elec {
+    show_info: ShowInfo;
+}
+
+export interface ShowInfo {
+    show:     boolean;
+    state:    number;
+    title:    string;
+    icon:     string;
+    jump_url: string;
 }
 
 interface Theme {}
@@ -397,7 +422,7 @@ export interface Master {
     level:   number;
     current: number;
     next:    number;
-    medal:   any;
+    medal:   Medal;
 }
 
 export interface VipInfo {
