@@ -364,3 +364,46 @@ interface Vip3 {
     themeType:     number;
     label:         {path: string};
 }
+
+export interface LiveInfoResp {
+    room_id:                  number;
+    main_site_level_rank:     number;
+    master:                   Master;
+    vip_info:                 VipInfo;
+    live_time:                number;
+    bili_coins:               number;
+    san:                      number;
+    count:                    Count;
+    anchor_switch_info:       AnchorSwitchInfo;
+    need_guide:               number;
+    emoticon_management:      number;
+    up_emoticon_jurisdiction: number;
+    anchor_room_emoticon:     number;
+}
+
+export interface AnchorSwitchInfo {
+    voice_barrage: number;
+}
+
+export interface Count {
+    guard:      number;
+    fans_medal: number;
+    title:      number;
+    title_new:  number;
+    achieve:    number;
+}
+
+export interface Master {
+    level:   number;
+    current: number;
+    next:    number;
+    medal:   any;
+}
+
+export interface VipInfo {
+    vip_endtime:     string;
+    svip_endtime:    string;
+    month_price:     number;
+    year_price:      number;
+    vip_view_status: boolean;
+}

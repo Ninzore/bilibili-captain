@@ -1,6 +1,7 @@
 import {BiliCredential} from "./biliCredential";
 import {Request} from "./request";
-import {UserInfo, MyInfoResp, UserInfoFromSearch, BatchUserInfosResp} from "./types/user";
+import {UserInfo, MyInfoResp, UserInfoFromSearch,
+    BatchUserInfosResp, LiveInfoResp} from "./types/user";
 
 /**
  * 用户
@@ -33,7 +34,7 @@ export class User {
 
     /**
      * 批量查看用户信息
-     * @param mid 用户id
+     * @param uids 用户id
      * @returns 
      */
     static async batchInfos(uids: number[]): Promise<BatchUserInfosResp[]> {
@@ -55,6 +56,13 @@ export class User {
     }
     async myInfo(): Promise<MyInfoResp> {
         return User.myInfo(this.credential);
+    }
+
+    async liveInfo(): Promise<LiveInfoResp> {
+        return Request.get(
+            "https://api.live.bilibili.com/xlive/web-ucenter/user/live_info",
+            {}, this.credential
+        ).then(res => {return res.data});
     }
 
     /**
