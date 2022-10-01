@@ -63,14 +63,6 @@ export class BiliCredential {
             if (!this.uid) this.uid = res.mid;
             this.info = res;
             this.valid = true;
-
-            await User.info(this.uid).then(res => {
-                this.info.liveroom = res.live_room.roomStatus === 0 
-                ? undefined : res.live_room;
-            }).catch(() => {
-                console.error("自动获取直播间id失败");
-                this.info.liveroom = undefined;
-            });
             return true;
         }).catch((err) => {
             console.error("登录失效", err);
