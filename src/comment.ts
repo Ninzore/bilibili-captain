@@ -1,7 +1,7 @@
-import {BiliCredential} from "./biliCredential";
-import {Request} from "./request";
-import {Btype} from "./types/common";
-import {AddResponse, SortBy, ListResponse, CommonResponse} from "./types/comment";
+import { BiliCredential } from "./biliCredential";
+import { Request } from "./request";
+import { Btype } from "./types/common";
+import { AddResponse, SortBy, ListResponse, CommonResponse, Content } from "./types/comment";
 
 /**
  * 评论区
@@ -25,7 +25,7 @@ export class Comment {
         oid = oid ?? this.oid;
         type = type ?? this.type;
         if (!oid || !type) throw "需要提供oid和type";
-        
+
         let payload = {
             oid,
             message,
@@ -40,9 +40,9 @@ export class Comment {
             "https://api.bilibili.com/x/v2/reply/add",
             payload,
             this.credential
-        ).then(res => {return res;});
+        ).then(res => { return res; });
     }
-    
+
     /**
      * 发送回复
      * @param oid 评论区id
@@ -57,7 +57,7 @@ export class Comment {
         oid = oid ?? this.oid;
         type = type ?? this.type;
         if (!oid || !type) throw "需要提供oid和type";
-        
+
         let payload = {
             oid,
             message,
@@ -74,7 +74,7 @@ export class Comment {
             "https://api.bilibili.com/x/v2/reply/add",
             payload,
             this.credential
-        ).then(res => {return res;});
+        ).then(res => { return res; });
     }
 
     /**
@@ -115,7 +115,7 @@ export class Comment {
         oid = oid ?? this.oid;
         type = type ?? this.type;
         if (!oid || !type) throw "需要提供oid和type";
-        
+
         return Request.post(
             "https://api.bilibili.com/x/v2/reply/top",
             {
@@ -142,7 +142,7 @@ export class Comment {
         oid = oid ?? this.oid;
         type = type ?? this.type;
         if (!oid || !type) throw "需要提供oid和type";
-        
+
         return Request.get(
             "https://api.bilibili.com/x/v2/reply",
             {
@@ -165,12 +165,12 @@ export class Comment {
      * @param type 	评论区类型
      * @returns 
      */
-    async like(rpid: string, action: boolean): Promise<boolean> 
+    async like(rpid: string, action: boolean): Promise<boolean>
     async like(rpid: string, action = true, oid?: string, type?: Btype): Promise<boolean> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
         if (!oid || !type) throw "需要提供oid和type";
-        
+
         return Request.get(
             "https://api.bilibili.com/x/v2/reply/action",
             {
@@ -182,7 +182,7 @@ export class Comment {
                 jsonp: "jsonp",
             },
             this.credential
-        ).then(res => {return res.code === 0});
+        ).then(res => { return res.code === 0 });
     }
 
     /**
@@ -197,7 +197,7 @@ export class Comment {
         oid = oid ?? this.oid;
         type = type ?? this.type;
         if (!oid || !type) throw "需要提供oid和type";
-        
+
         return Request.get(
             "http://api.bilibili.com/x/v2/reply/hate",
             {
@@ -209,6 +209,6 @@ export class Comment {
                 jsonp: "jsonp",
             },
             this.credential
-        ).then(res => {return res.code === 0});
+        ).then(res => { return res.code === 0 });
     }
 }

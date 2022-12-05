@@ -1,12 +1,12 @@
 import axios from "axios";
 import * as fs from "fs-extra";
 import * as FormData from "form-data";
-import {User} from "./user";
-import {readFile} from "./utils";
-import {Dynamic} from "./dynamic";
-import {Request} from "./request";
+import { User } from "./user";
+import { readFile } from "./utils";
+import { Dynamic } from "./dynamic";
+import { Request } from "./request";
 import { BiliCredential } from "./biliCredential";
-import {ParseAt, DynamicCtrl, ResInfo, Btype, UploadBfsResp} from "./types/common";
+import { ParseAt, DynamicCtrl, ResInfo, Btype, UploadBfsResp } from "./types/common";
 
 interface Obj {
     [key: string]: number;
@@ -30,13 +30,13 @@ export class Common {
         let at_uids: string[] = [];
         let ctrl: DynamicCtrl[] = [];
         const match = text.matchAll(/@(\S+)/g);
-        
+
         for await (let group of match) {
             if (group.index == undefined) throw "at 解析错误";
             const user = group[1];
             const mid = (await User.exist(user)).toString();
             if (!mid) throw `${user} 这名用户不存在`;
-            
+
             at_uids.push(mid);
             ctrl.push({
                 location: group.index,
@@ -45,7 +45,7 @@ export class Common {
                 data: mid
             });
         }
-        return {at_uids, ctrl};
+        return { at_uids, ctrl };
     }
 
     /**
@@ -55,7 +55,7 @@ export class Common {
      */
     static async uploadBfs(file: string | Buffer | fs.ReadStream, credential: BiliCredential): Promise<UploadBfsResp> {
         if (typeof file === "string") file = await readFile(file);
-        
+
         let form = new FormData();
         form.append("biz", "dyn");
         form.append("file_up", file);
@@ -66,19 +66,19 @@ export class Common {
             "https://api.bilibili.com/x/dynamic/feed/draw/upload_bfs",
             form,
             credential
-        ).then(res => {return res.data;});
+        ).then(res => { return res.data; });
     }
 
     static async expandShortUrl(shortUrl: string): Promise<string> {
         return axios.head(shortUrl, {
-            headers : {
-                "Accept" : "application/json",
-                "Host" : "b23.tv",
+            headers: {
+                "Accept": "application/json",
+                "Host": "b23.tv",
                 "user-agent": Request.user_agent
             }
         }).then(async res => {
-            const destination: string = res.request.host 
-            + res.request.path.substring(0, res.request.path.indexOf("?"));
+            const destination: string = res.request.host
+                + res.request.path.substring(0, res.request.path.indexOf("?"));
             return destination;
         });
     }
@@ -110,7 +110,7 @@ export class Common {
         const add = 8728348608;
 
         if (id.startsWith("BV")) {
-            const avbvtable: Obj = {"1":13,"2":12,"3":46,"4":31,"5":43,"6":18,"7":40,"8":28,"9":5,"f":0,"Z":1,"o":2,"d":3,"R":4,"X":6,"Q":7,"D":8,"S":9,"U":10,"m":11,"y":14,"C":15,"k":16,"r":17,"z":19,"B":20,"q":21,"i":22,"v":23,"e":24,"Y":25,"a":26,"h":27,"b":29,"t":30,"x":32,"s":33,"W":34,"p":35,"H":36,"n":37,"J":38,"E":39,"j":41,"L":42,"V":44,"G":45,"g":47,"u":48,"M":49,"T":50,"K":51,"N":52,"P":53,"A":54,"w":55,"c":56,"F":57}
+            const avbvtable: Obj = { "1": 13, "2": 12, "3": 46, "4": 31, "5": 43, "6": 18, "7": 40, "8": 28, "9": 5, "f": 0, "Z": 1, "o": 2, "d": 3, "R": 4, "X": 6, "Q": 7, "D": 8, "S": 9, "U": 10, "m": 11, "y": 14, "C": 15, "k": 16, "r": 17, "z": 19, "B": 20, "q": 21, "i": 22, "v": 23, "e": 24, "Y": 25, "a": 26, "h": 27, "b": 29, "t": 30, "x": 32, "s": 33, "W": 34, "p": 35, "H": 36, "n": 37, "J": 38, "E": 39, "j": 41, "L": 42, "V": 44, "G": 45, "g": 47, "u": 48, "M": 49, "T": 50, "K": 51, "N": 52, "P": 53, "A": 54, "w": 55, "c": 56, "F": 57 }
             let r = 0;
             for (let i = 0; i < 6; i++) {
                 r += avbvtable[id[s[i]]] * 58 ** i;
@@ -122,7 +122,7 @@ export class Common {
             let x = (parseInt(id) ^ xor) + add;
             let r = "BV1  4 1 7  ".split("");
             for (let i = 0; i < 6; i++) {
-                r[s[i]] = (table[Math.floor(x / 58 ** i)  % 58]).toString();
+                r[s[i]] = (table[Math.floor(x / 58 ** i) % 58]).toString();
             }
             return r.join("");
         }

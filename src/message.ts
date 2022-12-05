@@ -1,10 +1,12 @@
 import fs from "fs-extra";
-import {BiliCredential} from "./biliCredential";
-import {Request} from "./request";
-import {Common} from "./common";
-import {UnreadMsgFeedResp, UnreadPrivateMsgCountResp, 
+import { BiliCredential } from "./biliCredential";
+import { Request } from "./request";
+import { Common } from "./common";
+import {
+    UnreadMsgFeedResp, UnreadPrivateMsgCountResp,
     ReplyMsgResp, LikeResp, SysMsgResp, MsgBoxResp,
-    MessageFromResp, SendMsgResp} from "./types/message";
+    MessageFromResp, SendMsgResp
+} from "./types/message";
 
 /**
  * 收件箱
@@ -27,7 +29,7 @@ export class Message {
                 build: 0,
                 mobi_app: "web"
             }, this.credential
-        ).then(res => {return res.data;});
+        ).then(res => { return res.data; });
     }
 
     /**
@@ -43,7 +45,7 @@ export class Message {
                 mobi_app: "web"
             },
             this.credential
-        ).then(res => {return res.data;});
+        ).then(res => { return res.data; });
     }
 
     /**
@@ -54,12 +56,12 @@ export class Message {
         return Request.get(
             "https://api.bilibili.com/x/msgfeed/reply",
             {
-                platform:   "web",
+                platform: "web",
                 build: 0,
                 mobi_app: "web"
             },
             this.credential
-        ).then(res => {return res.data;});
+        ).then(res => { return res.data; });
     }
 
     /**
@@ -70,12 +72,12 @@ export class Message {
         return Request.get(
             "https://api.bilibili.com/x/msgfeed/like",
             {
-                platform:   "web",
+                platform: "web",
                 build: 0,
                 mobi_app: "web"
             },
             this.credential
-        ).then(res => {return res.data;});
+        ).then(res => { return res.data; });
     }
 
     /**
@@ -94,7 +96,7 @@ export class Message {
                 mobi_app: "web"
             },
             this.credential
-        ).then(res => {return res.data;});
+        ).then(res => { return res.data; });
     }
 
     /**
@@ -120,7 +122,7 @@ export class Message {
             "https://api.vc.bilibili.com/session_svr/v1/session_svr/get_sessions",
             params,
             this.credential
-        ).then(res => {return res.data;});
+        ).then(res => { return res.data; });
     }
 
     /**
@@ -141,7 +143,7 @@ export class Message {
                 csrf: this.credential.csfr
             },
             this.credential
-        ).then(res => {return res.msg === "0"});
+        ).then(res => { return res.msg === "0" });
     }
 
     /**
@@ -164,7 +166,7 @@ export class Message {
                 build: 0,
                 mobi_app: "web"
             }
-        ).then(res => {return res.data;});
+        ).then(res => { return res.data; });
     }
 
     /**
@@ -176,11 +178,11 @@ export class Message {
      */
     async sendMsg(receiver_id: number, content: string | Buffer | fs.ReadStream, msg_type: 1 | 2 | 5 = 1): Promise<any> {
         if (!this.credential.uid) throw "需要在BiliCredential中提供uid";
-        
+
         switch (msg_type) {
             case 1: {
                 if (typeof content !== "string") throw "msg_type 为1时候 content 应为 string";
-                content = JSON.stringify({content});
+                content = JSON.stringify({ content });
                 break;
             }
             case 2: {
@@ -194,8 +196,8 @@ export class Message {
                 break;
             }
             case 5: {
-                if (typeof content !== "string" 
-                || !/^\d{19}$/.test(content)) throw "撤回消息的 msg_key 应该为一个19位数";
+                if (typeof content !== "string"
+                    || !/^\d{19}$/.test(content)) throw "撤回消息的 msg_key 应该为一个19位数";
                 break;
             }
             default: throw "msg_type错误";
@@ -212,21 +214,21 @@ export class Message {
                     msg_status: 0,
                     content,
                     dev_id: this.credential.dev_id,
-                    timestamp: ~~ (Date.now() / 1000)
+                    timestamp: ~~(Date.now() / 1000)
                 },
                 csrf_token: this.credential.csfr,
                 csrf: this.credential.csfr
             },
             this.credential
         )
-        .then(res => {return res.data;})
-        .catch(err => {
-            if (err.code == 21041) {
-                console.warn("消息已超期，不能撤回了哦");
-                return err;
-            }
-            else throw err;
-        });
+            .then(res => { return res.data; })
+            .catch(err => {
+                if (err.code == 21041) {
+                    console.warn("消息已超期，不能撤回了哦");
+                    return err;
+                }
+                else throw err;
+            });
     }
 
     /**

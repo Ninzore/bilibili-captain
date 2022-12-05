@@ -1,7 +1,9 @@
-import {BiliCredential} from "./biliCredential";
-import {Request} from "./request";
-import {UserInfo, MyInfoResp, UserInfoFromSearch,
-    BatchUserInfosResp, LiveInfoResp} from "./types/user";
+import { BiliCredential } from "./biliCredential";
+import { Request } from "./request";
+import {
+    UserInfo, MyInfoResp, UserInfoFromSearch,
+    BatchUserInfosResp, LiveInfoResp
+} from "./types/user";
 
 /**
  * 用户
@@ -11,7 +13,7 @@ export class User {
 
     constructor(credential: BiliCredential, public uid?: number) {
         this.credential = credential;
-        
+
         if (!uid && !this.credential.uid) this.myInfo().then(res => {
             this.uid = res.mid;
         }).catch(() => {
@@ -27,9 +29,9 @@ export class User {
      */
     static async info(mid: number): Promise<UserInfo> {
         return Request.get(
-            "https://api.bilibili.com/x/space/acc/info", 
-            {mid}
-        ).then(res => {return res.data;});
+            "https://api.bilibili.com/x/space/acc/info",
+            { mid }
+        ).then(res => { return res.data; });
     }
 
     /**
@@ -39,9 +41,9 @@ export class User {
      */
     static async batchInfos(uids: number[]): Promise<BatchUserInfosResp[]> {
         return Request.get(
-            "https://api.vc.bilibili.com/account/v1/user/infos", 
-            {uids: uids.join(",")}
-        ).then(res => {return res.data;});
+            "https://api.vc.bilibili.com/account/v1/user/infos",
+            { uids: uids.join(",") }
+        ).then(res => { return res.data; });
     }
 
     /**
@@ -52,7 +54,7 @@ export class User {
         return Request.get(
             "https://api.bilibili.com/x/space/myinfo",
             {}, credential
-        ).then(res => {return res.data});
+        ).then(res => { return res.data });
     }
     async myInfo(): Promise<MyInfoResp> {
         return User.myInfo(this.credential);
@@ -62,7 +64,7 @@ export class User {
         return Request.get(
             "https://api.live.bilibili.com/xlive/web-ucenter/user/live_info",
             {}, this.credential
-        ).then(res => {return res.data});
+        ).then(res => { return res.data });
     }
 
     /**
@@ -73,8 +75,8 @@ export class User {
     static async exist(keyword: string | number): Promise<0 | number> {
         const checkInfo = async (keyword: number) => {
             return this.info(keyword)
-            .then(res => {return res.mid})
-            .catch(() => {return 0});
+                .then(res => { return res.mid })
+                .catch(() => { return 0 });
         }
 
         if (typeof keyword == "number") return checkInfo(keyword);
@@ -86,7 +88,7 @@ export class User {
             }
         }
     }
-    
+
     /**
      * 根据关键字搜索用户
      * @param keyword 搜索关键字
@@ -97,9 +99,9 @@ export class User {
             "https://app.bilibili.com/x/v2/search/type",
             {
                 keyword,
-                build : 63800200,  // 实测其实写啥都可以...但是得有
-                order : "fans",
-                type : 2,
+                build: 63800200,  // 实测其实写啥都可以...但是得有
+                order: "fans",
+                type: 2,
             }
         ).then(res => {
             return 'items' in res.data ? res.data.items : [];
@@ -126,7 +128,7 @@ export class User {
                 re_src,
                 csrf: this.credential.csfr
             }
-        ).then(res => {return res.code === 0});
+        ).then(res => { return res.code === 0 });
     }
 
     /**
@@ -157,7 +159,7 @@ export class User {
      * @param uid 用户uid
      * @returns 
      */
-     async rmFan(re_src: 11 | 14 | 115 | 222 = 11, uid?: number): Promise<boolean> {
+    async rmFan(re_src: 11 | 14 | 115 | 222 = 11, uid?: number): Promise<boolean> {
         return this._modifyRelation(7, re_src, uid);
     }
 }

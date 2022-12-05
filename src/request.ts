@@ -1,7 +1,7 @@
 import axios, { Method } from "axios";
 import * as FormData from "form-data";
 import * as qs from "qs";
-import {BiliCredential} from "./biliCredential";
+import { BiliCredential } from "./biliCredential";
 
 /**
  * 请求
@@ -9,9 +9,9 @@ import {BiliCredential} from "./biliCredential";
 export class Request {
     static user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36";
     static referer = "https://www.bilibili.com";
-    
-    static async request(url: string, method: Method, params: Object = {}, 
-    data?: string | Object | FormData, credential?: BiliCredential): Promise<any> {
+
+    static async request(url: string, method: Method, params: Object = {},
+        data?: string | Object | FormData, credential?: BiliCredential): Promise<any> {
         const headers = {
             "User-Agent": this.user_agent,
             "Referer": this.referer,

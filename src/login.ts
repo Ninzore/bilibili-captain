@@ -1,14 +1,14 @@
-import {URL} from "url";
+import { URL } from "url";
 import * as qrcode from "qrcode";
-import {Request} from "./request";
-import {BiliCredential} from "./biliCredential";
-import {GetQRResp, GetLoginInfoSuccResp, GetLoginInfoFailResp} from "./types/login";
+import { Request } from "./request";
+import { BiliCredential } from "./biliCredential";
+import { GetQRResp, GetLoginInfoSuccResp, GetLoginInfoFailResp } from "./types/login";
 
 /**
  * 登录
  */
 export class Login {
-    constructor() {}
+    constructor() { }
 
     /**
      * 获取二维码链接
@@ -26,16 +26,16 @@ export class Login {
      * @returns 
      */
     private static async _getQRloginInfo(oauthKey: string)
-    : Promise<GetLoginInfoSuccResp | GetLoginInfoFailResp> {
+        : Promise<GetLoginInfoSuccResp | GetLoginInfoFailResp> {
         return Request.post(
             "https://passport.bilibili.com/qrcode/getLoginInfo",
-            {oauthKey}
+            { oauthKey }
         )
-        .then(res => res.data)
-        .catch(err => {
-            if (err.data) return err;
-            else throw err;
-        });
+            .then(res => res.data)
+            .catch(err => {
+                if (err.data) return err;
+                else throw err;
+            });
     }
 
     /**
@@ -45,7 +45,7 @@ export class Login {
     private static async _renderQR(
         text: string,
         output: "terminal" | "string" | "buffer")
-    : Promise<void | string | Buffer> {
+        : Promise<void | string | Buffer> {
         switch (output) {
             case "string": return qrcode.toString(text);
             case "buffer": return qrcode.toBuffer(text);
@@ -70,7 +70,7 @@ export class Login {
         let count_down = 60;
         const polling = setTimeout(async (count_down) => {
             const res = await this._getQRloginInfo(qr_info.oauthKey);
-            
+
             if ("url" in res) {
                 clearInterval(polling);
                 const params = new URL(res.url).searchParams;
@@ -83,10 +83,10 @@ export class Login {
                 if (!bili_jct) throw "未取得bili_jct";
                 console.log(uid, "已完成扫码登录");
                 callback(new BiliCredential(sessdata, bili_jct,
-                {uid, refreshToken, dedeUserID__ckMd5, timestamp: res.timestamp}));
+                    { uid, refreshToken, dedeUserID__ckMd5, timestamp: res.timestamp }));
             }
             else {
-                count_down --;
+                count_down--;
                 if (count_down > 0) polling.refresh();
                 else {
                     switch (res.data) {

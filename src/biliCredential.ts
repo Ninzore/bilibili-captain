@@ -1,5 +1,5 @@
-import {User} from "./user";
-import {MyInfoResp, LiveRoom} from "./types/user";
+import { User } from "./user";
+import { MyInfoResp, LiveRoom } from "./types/user";
 
 interface Info extends MyInfoResp {
     liveroom?: LiveRoom;
@@ -29,9 +29,11 @@ export class BiliCredential {
      * @param extra uid: 用户uid; dev_id: device id，不传的话会自动生成
      */
     constructor(SESSDATA: string, bili_jct: string,
-        extra?: {uid?: number, refreshToken?: string,
-        dev_id?: string, timestamp?: number, dedeUserID__ckMd5?: string}) {
-        this.cookie = {SESSDATA, bili_jct};
+        extra?: {
+            uid?: number, refreshToken?: string,
+            dev_id?: string, timestamp?: number, dedeUserID__ckMd5?: string
+        }) {
+        this.cookie = { SESSDATA, bili_jct };
         this.csfr = bili_jct;
         this.uid = extra?.uid ? extra?.uid : 0;
         this.refreshToken = extra?.refreshToken ? extra?.refreshToken : "";

@@ -1,8 +1,8 @@
-import {BiliCredential} from "./biliCredential";
-import {Request} from "./request";
+import { BiliCredential } from "./biliCredential";
+import { Request } from "./request";
 import { StatResponse, PageListReturn, VideoDetail, TripleResponse } from "./types/video";
-import {Common} from "./common";
-import {Comment} from "./comment";
+import { Common } from "./common";
+import { Comment } from "./comment";
 
 /**
  * 视频
@@ -15,7 +15,7 @@ export class Video {
         this.credential = credential;
         if (bvid) this.comment = new Comment(credential, Common.avBvInterchange(bvid), 1);
     }
-    
+
     /**
      * 获取视频详细信息
      * @param bvid 
@@ -26,9 +26,9 @@ export class Video {
         if (!bvid) throw "需要提供bvid";
         return Request.get(
             "http://api.bilibili.com/x/web-interface/view",
-            {bvid},
+            { bvid },
             this.credential
-        ).then(res => {return res.data;});
+        ).then(res => { return res.data; });
     }
 
     /**
@@ -39,8 +39,8 @@ export class Video {
     static async detail(bvid: string): Promise<VideoDetail> {
         return Request.get(
             "http://api.bilibili.com/x/web-interface/view",
-            {bvid}
-        ).then(res => {return res.data;});
+            { bvid }
+        ).then(res => { return res.data; });
     }
 
     /**
@@ -51,8 +51,8 @@ export class Video {
     static async desc(bvid: string): Promise<string> {
         return Request.get(
             "http://api.bilibili.com/x/web-interface/archive/desc",
-            {bvid}
-        ).then(res => {return res.data;});
+            { bvid }
+        ).then(res => { return res.data; });
     }
     async desc(bvid?: string): Promise<string> {
         bvid = bvid ?? this.bvid;
@@ -68,8 +68,8 @@ export class Video {
     static async stat(bvid: string): Promise<StatResponse> {
         return Request.get(
             "https://api.bilibili.com/x/web-interface/archive/stat",
-            {bvid}
-        ).then(res => {return res.data;});
+            { bvid }
+        ).then(res => { return res.data; });
     }
     async stat(bvid?: string): Promise<StatResponse> {
         bvid = bvid || this.bvid;
@@ -85,8 +85,8 @@ export class Video {
     static async pagelist(bvid: string): Promise<PageListReturn[]> {
         return Request.get(
             "http://api.bilibili.com/x/player/pagelist",
-            {bvid}
-        ).then(res => {return res.data;});
+            { bvid }
+        ).then(res => { return res.data; });
     }
     async pagelist(bvid?: string): Promise<PageListReturn[]> {
         bvid = bvid ?? this.bvid;
@@ -111,7 +111,7 @@ export class Video {
                 csrf: this.credential.csfr
             },
             this.credential
-        ).then(res => {return res.code === 0});
+        ).then(res => { return res.code === 0 });
     }
 
     /**
@@ -133,7 +133,7 @@ export class Video {
                 csrf: this.credential.csfr
             },
             this.credential
-        ).then(res => {return res.data.like});
+        ).then(res => { return res.data.like });
     }
 
     /**
@@ -151,7 +151,7 @@ export class Video {
             Common.avBvInterchange(bvid);
         }
         else rid = avid;
-        
+
         return Request.post(
             "https://api.bilibili.com/x/v3/fav/resource/deal",
             {
@@ -162,7 +162,7 @@ export class Video {
                 csrf: this.credential.csfr
             },
             this.credential
-        ).then(res => {return res.data.prompt});
+        ).then(res => { return res.data.prompt });
     }
 
     /**
@@ -180,6 +180,6 @@ export class Video {
                 csrf: this.credential.csfr
             },
             this.credential
-        ).then(res => {return res.data});
+        ).then(res => { return res.data });
     }
 }

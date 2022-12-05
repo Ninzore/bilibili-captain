@@ -1,10 +1,12 @@
-import {ReadStream} from "fs-extra";
-import {BiliCredential} from "./biliCredential";
-import {CreateResponse, RepostResponse, DynamiDetail, 
+import { ReadStream } from "fs-extra";
+import { BiliCredential } from "./biliCredential";
+import {
+    CreateResponse, RepostResponse, DynamiDetail,
     CreateDraftResponse, PublishDraftResponse, RmDraftResponse, GetDraftsResponse,
-    PreJudgeResp} from "./types/dynamic";
-import {Request} from "./request";
-import {Common} from "./common";
+    PreJudgeResp
+} from "./types/dynamic";
+import { Request } from "./request";
+import { Common } from "./common";
 
 /**
  * 动态
@@ -24,10 +26,10 @@ export class Dynamic {
     static async detail(dynamic_id: string): Promise<DynamiDetail> {
         return Request.get(
             "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail",
-            {dynamic_id}
+            { dynamic_id }
         ).then(res => res.data);
     }
-    
+
     /**
      * 发送动态
      * @param text 动态文字
@@ -39,7 +41,7 @@ export class Dynamic {
     async create(text: string, images: [], publish_time: Date): Promise<CreateDraftResponse>
     async create(text: string, images: Array<string | Buffer | ReadStream>, publish_time: Date): Promise<CreateDraftResponse>
     async create(text: string, images?: Array<string | Buffer | ReadStream>, publish_time?: Date)
-    : Promise<CreateResponse | CreateDraftResponse> {
+        : Promise<CreateResponse | CreateDraftResponse> {
         if (publish_time) return this.schduledCreate(publish_time, text, images);
         return images ? Request.post(
             "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/create_draw",
@@ -85,7 +87,7 @@ export class Dynamic {
     private async _dynamicRequest(text: string, images?: Array<string | Buffer | ReadStream>): Promise<Object> {
         let at_uids: string[] = [];
         let ctrl: object[] = [];
-        if (text.indexOf("@") != -1) ({at_uids, ctrl} = await Common.parseAt(text));
+        if (text.indexOf("@") != -1) ({ at_uids, ctrl } = await Common.parseAt(text));
         const at_uids_str = JSON.stringify(at_uids);
         const ctrl_str = JSON.stringify(ctrl);
 
@@ -93,7 +95,7 @@ export class Dynamic {
             let pictures = [];
 
             for (const img of images) {
-                const res =  await Common.uploadBfs(img, this.credential);
+                const res = await Common.uploadBfs(img, this.credential);
                 pictures.push({
                     img_src: res.image_url,
                     img_width: res.image_width,
@@ -141,15 +143,15 @@ export class Dynamic {
      * @param duration 时长，3天|1周|一个月
      * @returns 
      */
-    async createVote(title: string, options: string[], 
+    async createVote(title: string, options: string[],
         opt_images: Array<string | Buffer | ReadStream> = [],
         choice_cnt = 1, desc = "", duration: 259200 | 604800 | 2592000 = 259200)
-        : Promise <string> {
+        : Promise<string> {
         if (options.length < 2) throw "最少需要2个选项";
         else if (options.length > 20) throw "最多只能有20个选项";
         else if (choice_cnt > options.length) throw "可选数量必须比选项少";
-        
-        let new_opts: {desc: string, img_url?: string}[] = [];
+
+        let new_opts: { desc: string, img_url?: string }[] = [];
         if (opt_images.length > 0) {
             if (options.length != opt_images.length) throw "选项和选项配图数量不一致";
             for (const i in options) {
@@ -162,7 +164,7 @@ export class Dynamic {
         else {
             for (const desc of options) {
                 if (desc.length < 1) throw "选项的长度必须大于0";
-                new_opts.push({desc: desc});
+                new_opts.push({ desc: desc });
             }
         }
 
@@ -210,7 +212,7 @@ export class Dynamic {
             "https://api.vc.bilibili.com/dynamic_draft/v1/dynamic_draft/get_drafts",
             {},
             this.credential
-        ).then(res =>  res.data.drafts);
+        ).then(res => res.data.drafts);
     }
 
     /**
@@ -255,7 +257,7 @@ export class Dynamic {
         if (!selfuid && !this.credential.uid) throw "需要提供自己的uid";
         return Request.get(
             "https://api.vc.bilibili.com/dynamic_repost/v1/dynamic_repost/pre_judge",
-            {uid: selfuid || this.credential.uid},
+            { uid: selfuid || this.credential.uid },
             this.credential
         ).then(res => res.data);
     }

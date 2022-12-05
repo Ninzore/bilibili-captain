@@ -1,12 +1,14 @@
-import {ReadStream} from "fs-extra"
+import { ReadStream } from "fs-extra"
 import * as FormData from "form-data";
-import {Request} from "./request";
-import {readFile} from "./utils";
-import {BiliCredential} from "./biliCredential";
-import {SignResp, LiveUserInfoResp, 
+import { Request } from "./request";
+import { readFile } from "./utils";
+import { BiliCredential } from "./biliCredential";
+import {
+    SignResp, LiveUserInfoResp,
     StartLiveResp, StopLiveResp, StreamAddrResp,
     UploadCoverResp, LiveAreaListResp, GetCoverListResp,
-    BaseInfoResp, RoomInfoResp} from "./types/live";
+    BaseInfoResp, RoomInfoResp
+} from "./types/live";
 
 /**
  * 直播间相关
@@ -126,8 +128,8 @@ export class Live {
      * @param manipulate 操作内容，标题=title，简介=description，新增标签=add_tag，删除标签=del_tag
      * @returns 
      */
-    private async _update(content: string, 
-    manipulate: "title" | "description" | "add_tag" | "del_tag"): Promise<boolean> {
+    private async _update(content: string,
+        manipulate: "title" | "description" | "add_tag" | "del_tag"): Promise<boolean> {
         if (!this.credential.info.liveroom?.roomid) throw "未能获取自己的房间号";
 
         interface UpdateForm {
@@ -140,7 +142,7 @@ export class Live {
             del_tag?: string;
         };
 
-        let form:UpdateForm = {
+        let form: UpdateForm = {
             room_id: this.credential.info.liveroom.roomid,
             csrf_token: this.credential.csfr,
             csrf: this.credential.csfr
@@ -196,7 +198,7 @@ export class Live {
      */
     private async _uploadCover(cover: string | Buffer | ReadStream): Promise<UploadCoverResp> {
         if (typeof cover === "string") cover = await readFile(cover);
-        
+
         let form = new FormData();
         form.append("file", cover);
         form.append("bucket", "live");
@@ -208,7 +210,7 @@ export class Live {
             this.credential
         ).then(res => res.data);
     }
-    
+
     /**
      * 获取最新上传的封面状态，推荐用在updateCover后
      * @returns 
@@ -218,7 +220,7 @@ export class Live {
 
         return Request.get(
             "https://api.live.bilibili.com/room/v1/Cover/new_get_list",
-            {room_id: this.credential.info.liveroom.roomid},
+            { room_id: this.credential.info.liveroom.roomid },
             this.credential
         ).then(res => res.data[0]);
     }
@@ -229,7 +231,7 @@ export class Live {
      */
     async getCoverList(): Promise<GetCoverListResp[]> {
         if (!this.credential.info.liveroom) throw "未能获取直播间信息";
-        
+
         return Request.get(
             "https://api.live.bilibili.com/room/v1/Cover/get_list",
             {
@@ -257,12 +259,12 @@ export class Live {
         if (pic_id === 0) throw "目前没有直播封面无法替换";
 
         const img_url = (await this._uploadCover(cover)).location;
-        
+
         // addCoverApi = /room/v1/Cover/add  添加封面
         return Request.post(
             cover_type == "cover"
-            ? "https://api.live.bilibili.com/room/v1/Cover/new_replace_cover"  // 普通直播
-            : "https://api.live.bilibili.com/room/v1/Cover/replace",  //  颜值区
+                ? "https://api.live.bilibili.com/room/v1/Cover/new_replace_cover"  // 普通直播
+                : "https://api.live.bilibili.com/room/v1/Cover/replace",  //  颜值区
             {
                 room_id: this.credential.info.liveroom.roomid,
                 url: img_url,
@@ -286,7 +288,7 @@ export class Live {
         return Request.get(
             "https://api.live.bilibili.com/xlive/web-room/v1/index/getRoomBaseInfo",
             {
-                [id_type === "uid" ? "uids" : "room_ids"] : id,
+                [id_type === "uid" ? "uids" : "room_ids"]: id,
                 req_biz: "space"
             }
         ).then(res => {
