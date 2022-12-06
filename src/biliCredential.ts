@@ -1,9 +1,5 @@
 import { User } from "./user";
-import { LiveRoom, MyInfoResp } from "./types/user";
-
-interface Info extends MyInfoResp {
-    liveroom?: LiveRoom;
-};
+import { UserInfo } from "./types/user";
 
 /**
  * 保存各种凭据
@@ -21,12 +17,12 @@ export class BiliCredential {
     public refreshToken!: string;
     public timestamp: number;
     public dedeUserIdCkMd5: string;
-    public info!: Info;
+    public info!: UserInfo;
     public valid: Boolean;
 
     /**
      * @param SESSDATA 必要
-     * @param bili_jct 必要
+     * @param biliJct 必要
      * @param extra uid: 用户uid; dev_id: device id，不传的话会自动生成
      */
     constructor(SESSDATA: string, biliJct: string,
@@ -64,14 +60,25 @@ export class BiliCredential {
     async validCredit() {
         return User.myInfo(this).then(async res => {
             if (!this.uid) this.uid = res.mid;
-            this.info = res;
             this.valid = true;
             return true;
         }).catch((err) => {
-            console.error("登录失效", err);
-            this.uid = 0;
+            console.error(this.uid, "登录失效", err);
             this.valid = false;
             return false;
         });
+    }
+
+    async loadInfo(): Promise<UserInfo> {
+        if (this.uid && this.valid) {
+            const info = await User.info(this.uid);
+            this.info = info;
+        }
+        else {
+            await this.validCredit();
+            const info = await User.info(this.uid);
+            this.info = info;
+        };
+        return this.info;
     }
 }
