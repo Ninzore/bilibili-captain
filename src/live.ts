@@ -109,7 +109,7 @@ export class Live {
      * @returns
      */
     async updateRoomNews(content: string): Promise<boolean> {
-        return Request.get(
+        return Request.post(
             "https://api.live.bilibili.com/xlive/app-blink/v1/index/updateRoomNews",
             {
                 room_id: this.liveroom.roomid,
