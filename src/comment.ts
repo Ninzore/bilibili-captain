@@ -47,7 +47,7 @@ export class Comment {
             payload,
             this.credential,
         ).then(res => {
-            return res;
+            return res.data;
         });
     }
 
@@ -82,7 +82,7 @@ export class Comment {
             payload,
             this.credential,
         ).then(res => {
-            return res;
+            return res.data;
         });
     }
 
@@ -93,7 +93,7 @@ export class Comment {
      * @param type 评论区类型
      * @returns
      */
-    async delete(replyId: string, oid?: string, type?: Btype): Promise<CommonResponse> {
+    async delete(replyId: string, oid?: string, type?: Btype): Promise<boolean> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
         if (!oid || !type) throw new Error("需要提供oid和type");
@@ -108,7 +108,9 @@ export class Comment {
                 csrf: this.credential.csfr,
             },
             this.credential,
-        );
+        ).then(res => {
+            return res.code === 0;
+        });
     }
 
     /**
@@ -118,7 +120,7 @@ export class Comment {
      * @param type 评论区类型
      * @returns
      */
-    async top(replyId: string, action: true, oid?: string, type?: Btype): Promise<CommonResponse> {
+    async top(replyId: string, action: true, oid?: string, type?: Btype): Promise<boolean> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
         if (!oid || !type) throw new Error("需要提供oid和type");
@@ -134,7 +136,9 @@ export class Comment {
                 csrf: this.credential.csfr,
             },
             this.credential,
-        );
+        ).then(res => {
+            return res.code === 0;
+        });
     }
 
     /**
@@ -159,7 +163,6 @@ export class Comment {
             },
             this.credential,
         ).then(res => {
-            console.log(Object.keys(res));
             return res.data.data;
         });
     }
