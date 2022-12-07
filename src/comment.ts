@@ -1,7 +1,7 @@
 import { BiliCredential } from "./biliCredential";
 import { Request } from "./request";
 import { Btype } from "./types/common";
-import { AddResponse, CommonResponse, ListResponse, SortBy } from "./types/comment";
+import { AddResponse, ListResponse, SortBy } from "./types/comment";
 
 /**
  * 评论区
