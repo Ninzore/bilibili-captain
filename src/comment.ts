@@ -15,7 +15,7 @@ export class Comment {
 
     /**
      * 发送评论
-     * @param oid 评论区id
+     * @param oid 评论区id，视频为av号，专栏为cv号，动态为动态id
      * @param message 回复内容
      * @param type 评论区类型
      * @returns
@@ -53,11 +53,11 @@ export class Comment {
 
     /**
      * 发送回复
-     * @param oid 评论区id
-     * @param type 评论区类型
-     * @param root 回复串根
-     * @param parent 想要回复的那条回复
+     * @param root 回复链根回复的id
+     * @param parent 想要回复的那条回复的id
      * @param message 回复内容
+     * @param oid 评论区id，视频为av号，专栏为cv号，动态为动态id
+     * @param type 评论区类型
      * @returns
      */
     async reply(root: number, parent: number, message: string, oid?: string, type?: Btype): Promise<AddResponse> {
@@ -88,7 +88,7 @@ export class Comment {
 
     /**
      * 删除一条回复
-     * @param oid 评论区id
+     * @param oid 评论区id，视频为av号，专栏为cv号，动态为动态id
      * @param replyId 回复id
      * @param type 评论区类型
      * @returns
@@ -115,7 +115,8 @@ export class Comment {
 
     /**
      * 置顶一条回复
-     * @param oid 评论区id
+     * @param oid 评论区id，视频为av号，专栏为cv号，动态为动态id
+     * @param action 操作类型, true为置顶，false为取消置顶
      * @param replyId 回复id
      * @param type 评论区类型
      * @returns
@@ -143,9 +144,10 @@ export class Comment {
 
     /**
      * 列出评论区
-     * @param oid 评论区id
-     * @param type 评论区类型
      * @param pageNum 评论区页数
+     * @param sort 排序方式，可以为时间，点赞数和回复量
+     * @param oid 评论区id，视频为av号，专栏为cv号，动态为动态id
+     * @param type 评论区类型
      * @returns
      */
     async list(pageNum = 0, sort = SortBy.like, oid?: string, type?: Btype): Promise<ListResponse> {
@@ -169,8 +171,9 @@ export class Comment {
 
     /**
      * 点赞评论、回复
-     * @param oid 评论区类型
-     * @param action 操作
+     * @param rpid 回复id
+     * @param action 操作类型, true为点赞，false为取消点赞
+     * @param oid 评论区id，视频为av号，专栏为cv号，动态为动态id
      * @param type 评论区类型
      * @returns
      */
@@ -197,8 +200,9 @@ export class Comment {
 
     /**
      * 踩评论、回复
-     * @param oid 评论区类型
-     * @param action 操作
+     * @param rpid 回复id
+     * @param action 操作类型, true为踩，false为取消踩
+     * @param oid 评论区id，视频为av号，专栏为cv号，动态为动态id
      * @param type 评论区类型
      * @returns
      */
