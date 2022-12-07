@@ -25,15 +25,22 @@ export class Comment {
         type = type ?? this.type;
         if (!oid || !type) throw new Error("需要提供oid和type");
 
-        const payload = {
-            oid,
-            message,
-            type,
-            plat: 1,
-            ordering: "heat",
-            jsonp: "jsonp",
-            csrf: this.credential.csfr,
-        };
+        const payload = type === 1
+            ? {
+                oid,
+                message,
+                type,
+                plat: 1,
+                csrf: this.credential.csfr,
+            } : {
+                oid,
+                message,
+                type,
+                plat: 1,
+                ordering: "heat",
+                jsonp: "jsonp",
+                csrf: this.credential.csfr,
+            };
 
         return Request.post(
             "https://api.bilibili.com/x/v2/reply/add",
