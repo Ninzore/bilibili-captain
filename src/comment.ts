@@ -20,7 +20,6 @@ export class Comment {
      * @param type 评论区类型
      * @returns
      */
-    async add(message: string): Promise<AddResponse>;
     async add(message: string, oid?: string, type?: Btype): Promise<AddResponse> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
@@ -54,7 +53,6 @@ export class Comment {
      * @param message 回复内容
      * @returns
      */
-    async reply(root: number, parent: number, message: string): Promise<AddResponse>;
     async reply(root: number, parent: number, message: string, oid?: string, type?: Btype): Promise<AddResponse> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
@@ -88,7 +86,6 @@ export class Comment {
      * @param type 评论区类型
      * @returns
      */
-    async delete(replyId: string): Promise<CommonResponse>;
     async delete(replyId: string, oid?: string, type?: Btype): Promise<CommonResponse> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
@@ -114,7 +111,6 @@ export class Comment {
      * @param type 评论区类型
      * @returns
      */
-    async top(replyId: string, actionL: true): Promise<CommonResponse>;
     async top(replyId: string, action: true, oid?: string, type?: Btype): Promise<CommonResponse> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
@@ -141,7 +137,6 @@ export class Comment {
      * @param pageNum 评论区页数
      * @returns
      */
-    async list(pageNum: number, sort: SortBy): Promise<ListResponse>;
     async list(pageNum = 0, sort = SortBy.like, oid?: string, type?: Btype): Promise<ListResponse> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
@@ -169,7 +164,6 @@ export class Comment {
      * @param type 评论区类型
      * @returns
      */
-    async like(rpid: string, action: boolean): Promise<boolean>;
     async like(rpid: string, action = true, oid?: string, type?: Btype): Promise<boolean> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
@@ -198,7 +192,6 @@ export class Comment {
      * @param type 评论区类型
      * @returns
      */
-    async hate(rpid: string, action: true): Promise<boolean>;
     async hate(rpid: string, action = true, oid?: string, type?: Btype): Promise<boolean> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
