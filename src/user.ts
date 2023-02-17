@@ -1,5 +1,6 @@
 import { BiliCredential } from "./biliCredential";
 import { Request } from "./request";
+import { BiliCaptainError } from "./error";
 import {
     BatchUserInfosResp, LiveInfoResp, MyInfoResp,
     UserInfo, UserInfoFromSearch,
@@ -133,7 +134,7 @@ export class User {
      */
     private async _modifyRelation(act: 1 | 2 | 3 | 4 | 5 | 6 | 7 = 1, replySrc: 11 | 14 | 115 | 222 = 11, uid?: number): Promise<boolean> {
         uid = uid ?? this.uid;
-        if (!uid) throw new Error("需要用户uid");
+        if (!uid) throw new BiliCaptainError("需要用户uid");
 
         return Request.get(
             "https://api.bilibili.com/x/relation/modify",

@@ -4,7 +4,7 @@ import * as fs from "fs-extra";
 
 const MAX_SIZE = 20 * 1024 * 1024;
 const ACCEPT_TYPE = ["jpg", "jpeg", "png", "gif", "pjp", "pjepg", "jfif"];
-
+import { BiliCaptainError } from "./error";
 export async function readFile(file: string): Promise<fs.ReadStream> {
     const filepath = file;
 
@@ -15,21 +15,21 @@ export async function readFile(file: string): Promise<fs.ReadStream> {
             const mime = res.headers["content-type"];
             const subtype = mime.split("/")[1];
 
-            if (!/image/.test(mime)) throw new Error("链接指向内容的 content-type 不是 image");
-            else if (!ACCEPT_TYPE.some(supported => supported === subtype)) throw new Error("仅支持JPG PNG GIF");
-            else if (parseInt(res.headers["content-length"]) > MAX_SIZE) throw new Error("文件大小请勿超过20M");
+            if (!/image/.test(mime)) throw new BiliCaptainError("链接指向内容的 content-type 不是 image");
+            else if (!ACCEPT_TYPE.some(supported => supported === subtype)) throw new BiliCaptainError("仅支持JPG PNG GIF");
+            else if (parseInt(res.headers["content-length"]) > MAX_SIZE) throw new BiliCaptainError("文件大小请勿超过20M");
             else return res.data;
         });
     }
     else {
         fs.stat(filepath, (err, stat) => {
-            if (err) throw new Error(`${filepath} ${err.code === "ENOENT" ? "文件不存在" : "文件不可读"}`);
-            else if (!stat.isFile()) throw new Error(`${filepath} 不是文件`);
-            else if (stat.size > MAX_SIZE) throw new Error("文件大小请勿超过20M");
+            if (err) throw new BiliCaptainError(`${filepath} ${err.code === "ENOENT" ? "文件不存在" : "文件不可读"}`);
+            else if (!stat.isFile()) throw new BiliCaptainError(`${filepath} 不是文件`);
+            else if (stat.size > MAX_SIZE) throw new BiliCaptainError("文件大小请勿超过20M");
         });
         const extname = path.extname(filepath).slice(1).toLowerCase();
         if (!ACCEPT_TYPE.some(supported =>
-            supported === extname)) throw new Error("仅支持JPG PNG GIF");
+            supported === extname)) throw new BiliCaptainError("仅支持JPG PNG GIF");
         return fs.createReadStream(filepath);
     }
 }

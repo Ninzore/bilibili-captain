@@ -1,5 +1,6 @@
 import { ReadStream } from "fs-extra";
 import { BiliCredential } from "./biliCredential";
+import { BiliCaptainError } from "./error";
 import {
     CreateDraftResponse, CreateResponse, DynamiDetail,
     GetDraftsResponse, PreJudgeResp, PublishDraftResponse, RepostResponse,
@@ -69,7 +70,7 @@ export class Dynamic {
      * @returns
      */
     async schduledCreate(publishTime: Date, text: string, images?: (string | Buffer | ReadStream)[]): Promise<CreateDraftResponse> {
-        if (new Date() > publishTime) throw new Error("定时发布时间必须大于当前时间");
+        if (new Date() > publishTime) throw new BiliCaptainError("定时发布时间必须大于当前时间");
         return Request.post(
             "https://api.vc.bilibili.com/dynamic_draft/v1/dynamic_draft/add_draft",
             {
@@ -145,15 +146,15 @@ export class Dynamic {
     async createVote(title: string, options: string[],
         optImages: (string | Buffer | ReadStream)[] = [],
         choiceCnt = 1, desc = "", duration: 259200 | 604800 | 2592000 = 259200): Promise<string> {
-        if (options.length < 2) throw new Error("最少需要2个选项");
-        else if (options.length > 20) throw new Error("最多只能有20个选项");
-        else if (choiceCnt > options.length) throw new Error("可选数量必须比选项少");
+        if (options.length < 2) throw new BiliCaptainError("最少需要2个选项");
+        else if (options.length > 20) throw new BiliCaptainError("最多只能有20个选项");
+        else if (choiceCnt > options.length) throw new BiliCaptainError("可选数量必须比选项少");
 
         const newOpts: { desc: string, img_url?: string }[] = [];
         if (optImages.length > 0) {
-            if (options.length !== optImages.length) throw new Error("选项和选项配图数量不一致");
+            if (options.length !== optImages.length) throw new BiliCaptainError("选项和选项配图数量不一致");
             for (const i in options) {
-                if (options[i].length < 1) throw new Error("选项的长度必须大于0");
+                if (options[i].length < 1) throw new BiliCaptainError("选项的长度必须大于0");
                 const res = await Common.uploadBfs(optImages[i], this.credential);
                 newOpts[i].img_url = res.image_url;
                 newOpts[i].desc = desc;
@@ -161,7 +162,7 @@ export class Dynamic {
         }
         else {
             for (const desc of options) {
-                if (desc.length < 1) throw new Error("选项的长度必须大于0");
+                if (desc.length < 1) throw new BiliCaptainError("选项的长度必须大于0");
                 newOpts.push({ desc });
             }
         }
@@ -252,7 +253,7 @@ export class Dynamic {
      * @returns
      */
     async preJudge(selfuid?: number): Promise<PreJudgeResp> {
-        if (!selfuid && !this.credential.uid) throw new Error("需要提供自己的uid");
+        if (!selfuid && !this.credential.uid) throw new BiliCaptainError("需要提供自己的uid");
         return Request.get(
             "https://api.vc.bilibili.com/dynamic_repost/v1/dynamic_repost/pre_judge",
             { uid: selfuid || this.credential.uid },

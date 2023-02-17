@@ -3,7 +3,7 @@ import { Request } from "./request";
 import { PageListReturn, StatResponse, TripleResponse, VideoDetail } from "./types/video";
 import { Common } from "./common";
 import { Comment } from "./comment";
-
+import { BiliCaptainError } from "./error";
 /**
  * 视频
  */
@@ -23,7 +23,7 @@ export class Video {
      */
     async detail(bvid?: string): Promise<VideoDetail> {
         bvid = bvid ?? this.bvid;
-        if (!bvid) throw new Error("需要提供bvid");
+        if (!bvid) throw new BiliCaptainError("需要提供bvid");
         return Request.get(
             "http://api.bilibili.com/x/web-interface/view",
             { bvid },
@@ -63,7 +63,7 @@ export class Video {
 
     async desc(bvid?: string): Promise<string> {
         bvid = bvid ?? this.bvid;
-        if (!bvid) throw new Error("需要提供bvid");
+        if (!bvid) throw new BiliCaptainError("需要提供bvid");
         return Video.desc(bvid);
     }
 
@@ -83,7 +83,7 @@ export class Video {
 
     async stat(bvid?: string): Promise<StatResponse> {
         bvid = bvid || this.bvid;
-        if (!bvid) throw new Error("需要提供bvid");
+        if (!bvid) throw new BiliCaptainError("需要提供bvid");
         return Video.stat(bvid);
     }
 
@@ -103,7 +103,7 @@ export class Video {
 
     async pagelist(bvid?: string): Promise<PageListReturn[]> {
         bvid = bvid ?? this.bvid;
-        if (!bvid) throw new Error("需要提供bvid");
+        if (!bvid) throw new BiliCaptainError("需要提供bvid");
         return Video.pagelist(bvid);
     }
 
@@ -115,7 +115,7 @@ export class Video {
      */
     async like(like: true, bvid?: string): Promise<boolean> {
         bvid = bvid || this.bvid;
-        if (!bvid) throw new Error("需要提供bvid");
+        if (!bvid) throw new BiliCaptainError("需要提供bvid");
         return Request.post(
             "https://api.bilibili.com/x/web-interface/archive/like",
             {
@@ -138,7 +138,7 @@ export class Video {
      */
     async coin(multiply: 2, like: true, bvid?: string): Promise<boolean> {
         bvid = bvid || this.bvid;
-        if (!bvid) throw new Error("需要提供bvid");
+        if (!bvid) throw new BiliCaptainError("需要提供bvid");
         return Request.post(
             "https://api.bilibili.com/x/web-interface/coin/add",
             {
@@ -164,7 +164,7 @@ export class Video {
         let rid = "";
         if (!avid) {
             bvid = bvid || this.bvid;
-            if (!bvid) throw new Error("需要提供bvid");
+            if (!bvid) throw new BiliCaptainError("需要提供bvid");
             Common.avBvInterchange(bvid);
         }
         else rid = avid;
@@ -191,7 +191,7 @@ export class Video {
      */
     async triple(bvid?: string): Promise<TripleResponse> {
         bvid = bvid || this.bvid;
-        if (!bvid) throw new Error("需要提供bvid");
+        if (!bvid) throw new BiliCaptainError("需要提供bvid");
         return Request.post(
             "http://api.bilibili.com/x/web-interface/archive/like/triple",
             {

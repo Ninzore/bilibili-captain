@@ -2,6 +2,7 @@ import fs from "fs-extra";
 import { BiliCredential } from "./biliCredential";
 import { Request } from "./request";
 import { Common } from "./common";
+import { BiliCaptainError } from "./error";
 import {
     LikeResp, MessageFromResp,
     MsgBoxResp, ReplyMsgResp, SendMsgResp, SysMsgResp,
@@ -193,11 +194,11 @@ export class Message {
      * @returns
      */
     async sendMsg(receiverId: number, content: string | Buffer | fs.ReadStream, msgType: 1 | 2 | 5 = 1): Promise<any> {
-        if (!this.credential.uid) throw new Error("需要在BiliCredential中提供uid");
+        if (!this.credential.uid) throw new BiliCaptainError("需要在BiliCredential中提供uid");
 
         switch (msgType) {
             case 1: {
-                if (typeof content !== "string") throw new Error("msgType 为1时候 content 应为 string");
+                if (typeof content !== "string") throw new BiliCaptainError("msgType 为1时候 content 应为 string");
                 content = JSON.stringify({ content });
                 break;
             }
@@ -213,10 +214,10 @@ export class Message {
             }
             case 5: {
                 if (typeof content !== "string"
-                    || !/^\d{19}$/.test(content)) throw new Error("撤回消息的 msgKey 应该为一个19位数");
+                    || !/^\d{19}$/.test(content)) throw new BiliCaptainError("撤回消息的 msgKey 应该为一个19位数");
                 break;
             }
-            default: throw new Error("msg_type错误");
+            default: throw new BiliCaptainError("msg_type错误");
         }
 
         return Request.post(

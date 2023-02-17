@@ -76,8 +76,8 @@ export class Login {
                 const uid = parseInt(params.get("DedeUserID") as string);
                 const dedeUserIdCkMd5 = params.get("DedeUserID__ckMd5") as string;
                 const refreshToken = res.refresh_token;
-                if (!sessdata) throw new Error("未取得SESSDATA");
-                if (!biliJct) throw new Error("未取得bili_jct");
+                if (!sessdata) throw new BiliCaptainError("未取得SESSDATA");
+                if (!biliJct) throw new BiliCaptainError("未取得bili_jct");
                 console.log(uid, "已完成扫码登录");
                 callback(new BiliCredential(sessdata, biliJct,
                     { uid, refreshToken, dedeUserIdCkMd5, timestamp: res.timestamp }));
@@ -87,11 +87,11 @@ export class Login {
                 if (countDown > 0) polling.refresh();
                 else {
                     switch (res.data) {
-                        case -1: throw new Error("秘钥错误");
-                        case -2: throw new Error("密钥超时");
-                        case -4: throw new Error("未扫描");
-                        case -5: throw new Error("未确认");
-                        default: throw new Error("未知错误");
+                        case -1: throw new BiliCaptainError("秘钥错误");
+                        case -2: throw new BiliCaptainError("密钥超时");
+                        case -4: throw new BiliCaptainError("未扫描");
+                        case -5: throw new BiliCaptainError("未确认");
+                        default: throw new BiliCaptainError("未知错误");
                     }
                 }
             }

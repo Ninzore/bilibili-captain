@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: 14K
  * @Date: 2023-02-17 17:58:59
- * @LastEditTime: 2023-02-17 18:21:28
+ * @LastEditTime: 2023-02-17 19:28:21
  * @LastEditors: 14K
  */
 import { Request } from "./request";
@@ -11,14 +11,16 @@ import {
     DanmakuData,
     SendDanmakuResp
 } from "./types/danmaku";
+import { BiliCaptainError } from "./error";
+
 /**
  * 发送弹幕
  */
 export class Danmaku {
     constructor(public credential: BiliCredential) {}
     async sendDanmaku(danmaku: DanmakuData): Promise<SendDanmakuResp> {
-        if (!danmaku.roomid) throw new DanmakuError("缺少发送的房间号");
-        if (!danmaku.msg) throw new DanmakuError("缺少发送消息");
+        if (!danmaku.roomid) throw new BiliCaptainError("缺少发送的房间号");
+        if (!danmaku.msg) throw new BiliCaptainError("缺少发送消息");
         return Request.post(
             "https://api.live.bilibili.com/msg/send",
             {
@@ -37,8 +39,4 @@ export class Danmaku {
             return res.data;
         });
     }
-}
-
-class DanmakuError extends Error {
-    name = "DanmakuError"
 }

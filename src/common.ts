@@ -7,7 +7,7 @@ import { Dynamic } from "./dynamic";
 import { Request } from "./request";
 import { BiliCredential } from "./biliCredential";
 import { Btype, DynamicCtrl, ParseAt, ResInfo, UploadBfsResp } from "./types/common";
-
+import { BiliCaptainError } from "./error";
 interface Obj {
     [key: string]: number;
 }
@@ -32,10 +32,10 @@ export class Common {
         const match = text.matchAll(/@(\S+)/g);
 
         for await (const group of match) {
-            if (group.index === undefined) throw new Error("at 解析错误");
+            if (group.index === undefined) throw new BiliCaptainError("at 解析错误");
             const user = group[1];
             const mid = (await User.exist(user)).toString();
-            if (!mid) throw new Error(`${user} 这名用户不存在`);
+            if (!mid) throw new BiliCaptainError(`${user} 这名用户不存在`);
 
             atUids.push(mid);
             ctrl.push({

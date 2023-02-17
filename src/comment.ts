@@ -2,7 +2,7 @@ import { BiliCredential } from "./biliCredential";
 import { Request } from "./request";
 import { Btype } from "./types/common";
 import { AddResponse, ListResponse, SortBy } from "./types/comment";
-
+import { BiliCaptainError } from "./error";
 /**
  * 评论区
  */
@@ -23,7 +23,7 @@ export class Comment {
     async add(message: string, oid?: string, type?: Btype): Promise<AddResponse> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
-        if (!oid || !type) throw new Error("需要提供oid和type");
+        if (!oid || !type) throw new BiliCaptainError("需要提供oid和type");
 
         const payload = type === 1
             ? {
@@ -63,7 +63,7 @@ export class Comment {
     async reply(root: number, parent: number, message: string, oid?: string, type?: Btype): Promise<AddResponse> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
-        if (!oid || !type) throw new Error("需要提供oid和type");
+        if (!oid || !type) throw new BiliCaptainError("需要提供oid和type");
 
         const payload = {
             oid,
@@ -96,7 +96,7 @@ export class Comment {
     async delete(replyId: string, oid?: string, type?: Btype): Promise<boolean> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
-        if (!oid || !type) throw new Error("需要提供oid和type");
+        if (!oid || !type) throw new BiliCaptainError("需要提供oid和type");
 
         return Request.post(
             "https://api.bilibili.com/x/v2/reply/del",
@@ -124,7 +124,7 @@ export class Comment {
     async top(replyId: string, action: true, oid?: string, type?: Btype): Promise<boolean> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
-        if (!oid || !type) throw new Error("需要提供oid和type");
+        if (!oid || !type) throw new BiliCaptainError("需要提供oid和type");
 
         return Request.post(
             "https://api.bilibili.com/x/v2/reply/top",
@@ -153,7 +153,7 @@ export class Comment {
     async list(pageNum = 0, sort = SortBy.like, oid?: string, type?: Btype): Promise<ListResponse> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
-        if (!oid || !type) throw new Error("需要提供oid和type");
+        if (!oid || !type) throw new BiliCaptainError("需要提供oid和type");
 
         return Request.get(
             "https://api.bilibili.com/x/v2/reply",
@@ -180,7 +180,7 @@ export class Comment {
     async like(rpid: string, action = true, oid?: string, type?: Btype): Promise<boolean> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
-        if (!oid || !type) throw new Error("需要提供oid和type");
+        if (!oid || !type) throw new BiliCaptainError("需要提供oid和type");
 
         return Request.get(
             "https://api.bilibili.com/x/v2/reply/action",
@@ -209,7 +209,7 @@ export class Comment {
     async hate(rpid: string, action = true, oid?: string, type?: Btype): Promise<boolean> {
         oid = oid ?? this.oid;
         type = type ?? this.type;
-        if (!oid || !type) throw new Error("需要提供oid和type");
+        if (!oid || !type) throw new BiliCaptainError("需要提供oid和type");
 
         return Request.get(
             "http://api.bilibili.com/x/v2/reply/hate",

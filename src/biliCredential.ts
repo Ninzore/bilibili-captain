@@ -46,7 +46,7 @@ export class BiliCredential {
 
         if (extra?.devId) {
             if (!/[\dA-F]{8}-[\dA-F]{4}-4[\dA-F]{3}-[\dA-F]{4}-[\dA-F]{12}/.test(extra?.devId)) {
-                throw new Error("dev_id 不符合规范，参考https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/message/private_msg.md");
+                throw new BiliCaptainError("dev_id 不符合规范，参考https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/message/private_msg.md");
             }
         }
         else {

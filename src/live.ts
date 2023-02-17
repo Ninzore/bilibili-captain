@@ -3,6 +3,7 @@ import * as FormData from "form-data";
 import { Request } from "./request";
 import { readFile } from "./utils";
 import { BiliCredential } from "./biliCredential";
+import { BiliCaptainError } from "./error";
 import {
     BaseInfoResp, GetCoverListResp,
     LiveAreaListResp, LiveUserInfoResp, RoomInfoResp,
@@ -20,7 +21,7 @@ export class Live {
 
     constructor(credential: BiliCredential) {
         if (!credential.uid || !credential.info.live_room) {
-            throw new Error("未能获取自己uid，需要先使用 BiliCredential.loadInfo");
+            throw new BiliCaptainError("未能获取自己uid，需要先使用 BiliCredential.loadInfo");
         }
 
         this.credential = credential;
@@ -151,7 +152,7 @@ export class Live {
             case "description": form.description = content; break;
             case "add_tag": form.add_tag = content; break;
             case "del_tag": form.del_tag = content; break;
-            default: throw new Error("操作错误");
+            default: throw new BiliCaptainError("操作错误");
         }
 
         return Request.post(
@@ -248,7 +249,7 @@ export class Live {
         for (const cover of covers) {
             if (cover.type === coverType) picId = cover.id;
         }
-        if (picId === 0) throw new Error("目前没有直播封面无法替换");
+        if (picId === 0) throw new BiliCaptainError("目前没有直播封面无法替换");
 
         const imgUrl = (await this._uploadCover(cover)).location;
 
@@ -286,7 +287,7 @@ export class Live {
         ).then(res => {
             const values = Object.values(
                 idType === "uid" ? res.data.by_uids : res.data.by_room_ids)[0];
-            if (!values) throw new Error("没有这个房间号");
+            if (!values) throw new BiliCaptainError("没有这个房间号");
             else return values as BaseInfoResp;
         });
     }
