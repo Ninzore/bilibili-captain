@@ -1,14 +1,12 @@
 export interface GetQRResp {
-    url:      string;
-    oauthKey: string;
+    url: string;
+    qrcode_key: string;
 }
 
-export interface GetLoginInfoSuccResp {
-    url: string;
+export interface GetLoginInfoResp {
+    code: number;
+    message: string;
     refresh_token: string;
     timestamp: number;
-}
-
-export interface GetLoginInfoFailResp {
-    data: -1 | -2 | -4 | -5;
+    url: string;
 }
