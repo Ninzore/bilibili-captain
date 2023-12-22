@@ -1,5 +1,6 @@
 import { User } from "./user";
 import { UserInfo } from "./types/user";
+import { devIdGen, devIdVerify } from "./sign";
 
 /**
  * 保存各种凭据
@@ -45,15 +46,12 @@ export class BiliCredential {
         this.cookieStr = tmp.join("; ");
 
         if (extra?.devId) {
-            if (!/[\dA-F]{8}-[\dA-F]{4}-4[\dA-F]{3}-[\dA-F]{4}-[\dA-F]{12}/.test(extra?.devId)) {
+            if (!devIdVerify(extra.devId)) {
                 throw new Error("dev_id 不符合规范，参考https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/message/private_msg.md");
             }
         }
         else {
-            this.devId = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, name => {
-                const randomInt = 16 * Math.random() | 0;
-                return (name === "x" ? randomInt : 3 & randomInt | 8).toString(16).toUpperCase();
-            });
+            this.devId = devIdGen();
         }
     }
 
