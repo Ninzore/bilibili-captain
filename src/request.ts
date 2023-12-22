@@ -43,4 +43,13 @@ export class Request {
     static async head(url: string, params = {}, credential?: BiliCredential): Promise<any> {
         return this.request(url, "HEAD", {}, params, credential);
     }
+
+    static cookiesParser(cookieStr: string): Object {
+        const cookies: { [key: string]: string; } = {};
+        cookieStr.split("; ").forEach(cookie => {
+            const [key, value] = cookie.split("=");
+            cookies[key] = value;
+        });
+        return cookies;
+    }
 }
