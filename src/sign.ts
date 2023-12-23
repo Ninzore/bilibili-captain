@@ -1,6 +1,5 @@
 import * as crypto from "crypto";
-import axios from "axios";
-import { BiliCredential } from "./biliCredential";
+import { Request } from "./request";
 
 export function devIdVerify(devId: string): boolean {
     return /[\dA-F]{8}-[\dA-F]{4}-4[\dA-F]{3}-[\dA-F]{4}-[\dA-F]{12}/.test(devId);
@@ -50,11 +49,14 @@ function encWbi(params: any, imgKey: string, subKey: string) {
 }
 
 // 获取最新的 img_key 和 sub_key
-async function getWbiKeys(credential: BiliCredential) {
-    const res = await axios("https://api.bilibili.com/x/web-interface/nav", {
-        headers: { cookies: credential.cookieStr },
-    });
-    const { data: { wbi_img: { img_url: imgUrl, sub_url: subUrl } } } = await res.data;
+async function getWbiKeys() {
+    const res = await Request
+        .get("https://api.bilibili.com/x/web-interface/nav")
+        .catch(err => {
+            if (err.code === -101) return err.data;
+            else throw err;
+        });
+    const { wbi_img: { img_url: imgUrl, sub_url: subUrl } } = res;
 
     return {
         img_key: imgUrl.slice(
@@ -68,8 +70,8 @@ async function getWbiKeys(credential: BiliCredential) {
     };
 }
 
-export async function wbiSign(credential: BiliCredential, params: object) {
-    const webKeys = await getWbiKeys(credential);
+export async function wbiSign(params: object) {
+    const webKeys = await getWbiKeys();
     const imgKey = webKeys.img_key;
     const subKey = webKeys.sub_key;
     const query = encWbi(params, imgKey, subKey);
