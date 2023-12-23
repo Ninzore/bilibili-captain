@@ -24,25 +24,29 @@ function encWbi(params: any, imgKey: string, subKey: string) {
     // 对 imgKey 和 subKey 进行字符顺序打乱编码
     const getMixinKey = (orig: any) => mixinKeyEncTab.map(n => orig[n]).join("").slice(0, 32);
 
-    const mixinKey = getMixinKey(imgKey + subKey),
-        currTime = Math.round(Date.now() / 1000),
-        chrFilter = /[!'()*]/g;
+    const mixinKey = getMixinKey(imgKey + subKey);
+    const currTime = Math.round(Date.now() / 1000);
+    const chrFilter = /[!'()*]/g;
 
+    Object.keys(params).forEach(key => {
+        params[key] = params[key].toString().replace(chrFilter, "");
+    });
     Object.assign(params, { wts: currTime }); // 添加 wts 字段
+
     // 按照 key 重排参数
     const query = Object
         .keys(params)
         .sort()
         .map(key => {
             // 过滤 value 中的 "!'()*" 字符
-            const value = params[key].toString().replace(chrFilter, "");
-            return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+            return `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`;
         })
         .join("&");
 
     // 计算 w_rid
     const wbiSign = crypto.createHash("md5").update(query + mixinKey).digest("hex");
-    return query + "&w_rid=" + wbiSign;
+    Object.assign(params, { w_rid: wbiSign });
+    return params;
 }
 
 // 获取最新的 img_key 和 sub_key
