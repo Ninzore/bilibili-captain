@@ -25,12 +25,27 @@ export class User {
     }
 
     /**
+     * 查看用户信息
+     * @param mid 用户id
+     * @returns
+     */
+    static async info(mid: number): Promise<UserInfo> {
+        return Request.get(
+            "https://api.bilibili.com/x/space/wbi/acc/info",
+            { mid },
+            { sign: "wbi" },
+        ).then(res => {
+            return res.data;
+        });
+    }
+
+    /**
      * 查看用户信息，旧版
      * @param mid 用户id
      * @returns
      * @deprecated
      */
-    static async info(mid: number): Promise<UserInfo> {
+    static async infoOld(mid: number): Promise<UserInfo> {
         return Request.get(
             "https://api.bilibili.com/x/space/acc/info",
             { mid },
