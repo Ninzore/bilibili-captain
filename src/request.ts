@@ -2,6 +2,7 @@ import axios, { Method } from "axios";
 import * as FormData from "form-data";
 import * as qs from "qs";
 import { BiliCredential } from "./biliCredential";
+import { wbiSign } from "./sign";
 
 /**
  * 请求
@@ -31,8 +32,19 @@ export class Request {
         });
     }
 
-    static async get(url: string, params: Object = {}, credential?: BiliCredential): Promise<any> {
-        return this.request(url, "GET", params, {}, credential);
+    static async get(url: string, params: object = {},
+        extra?: BiliCredential | { credential: BiliCredential, sign: string },
+    ): Promise<any> {
+        if (extra instanceof BiliCredential) {
+            return this.request(url, "GET", params, {}, extra);
+        }
+        else if (typeof extra === "object") {
+            if (extra.sign) params = await wbiSign(params);
+            return extra.credential
+                ? this.request(url, "GET", params, {}, extra.credential)
+                : this.request(url, "GET", params);
+        }
+        else return this.request(url, "GET", params);
     }
 
     static async post(url: string, data: string | Object | FormData, credential?: BiliCredential): Promise<any> {
