@@ -25,9 +25,10 @@ export class User {
     }
 
     /**
-     * 查看用户信息
+     * 查看用户信息，旧版
      * @param mid 用户id
      * @returns
+     * @deprecated
      */
     static async info(mid: number): Promise<UserInfo> {
         return Request.get(
