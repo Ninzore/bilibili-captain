@@ -33,7 +33,7 @@ export class Request {
     }
 
     static async get(url: string, params: object = {},
-        extra?: BiliCredential | { credential: BiliCredential, sign: string },
+        extra?: BiliCredential | { credential?: BiliCredential, sign: string },
     ): Promise<any> {
         if (extra instanceof BiliCredential) {
             return this.request(url, "GET", params, {}, extra);
