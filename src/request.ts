@@ -10,6 +10,8 @@ import { wbiSign } from "./sign";
 export class Request {
     static userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
     static referer = "https://www.bilibili.com";
+    static dmCoverImgStr = Request.encodeDmStr("ANGLE (NVIDIA, NVIDIA GeForce RTX 4090 (0x00002684) Direct3D11 vs_5_0 ps_5_0, D3D11)Google Inc. (NVIDIA)");
+    static dmImgStr = Request.encodeDmStr("WebGL 1.0 (OpenGL ES 2.0 Chromium)");
 
     static async request(url: string, method: Method, params: Object = {},
         data?: string | Object | FormData, credential?: BiliCredential): Promise<any> {
@@ -19,6 +21,9 @@ export class Request {
             "Cookie": credential ? credential.cookieStr : "",
             "Content-Type": data instanceof FormData
                 ? data.getHeaders()["content-type"] : "application/x-www-form-urlencoded",
+            "dm_cover_img_str": Request.dmCoverImgStr,
+            "dm_img_list": [],
+            "dm_img_str": Request.dmImgStr,
         };
 
         return axios(url, {
@@ -64,4 +69,9 @@ export class Request {
         });
         return cookies;
     }
+
+    static encodeDmStr(str: string): string {
+        const b64Value = Buffer.from(str).toString("base64");
+        return b64Value.substring(0, b64Value.length - 2);
+    };
 }
