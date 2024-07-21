@@ -12,6 +12,14 @@ export function devIdGen(): string {
     });
 }
 
+export function genBLsid(): string {
+    const char = "x";
+    return `${char.repeat(8)}_${char.repeat(11)}`.replace(/[x]/g, () => {
+        const randomInt = 16 * Math.random() | 0;
+        return ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"][randomInt];
+    });
+}
+
 // 为请求参数进行 wbi 签名
 function encWbi(params: any, imgKey: string, subKey: string) {
     const mixinKeyEncTab = [
