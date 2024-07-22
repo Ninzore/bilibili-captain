@@ -101,3 +101,10 @@ export async function wbiSign(params: object) {
 export function genBuvidFp(input: string): string {
     return murmurX64Hash128(input, 31);
 }
+
+export function getFingerSpi(): Promise<{ b_3: string, b_4: string }> {
+    return Request.get("https://api.bilibili.com/x/frontend/finger/spi").then(res => {
+        if (res.code === 0) return res.data;
+        else throw res;
+    });
+}
