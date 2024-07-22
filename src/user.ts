@@ -25,7 +25,8 @@ export class User {
     }
 
     /**
-     * 查看用户信息
+     * @deprecated
+     * 查看用户信息，无需登录，暂时停用
      * @param mid 用户id
      * @returns
      */
@@ -34,6 +35,21 @@ export class User {
             "https://api.bilibili.com/x/space/wbi/acc/info",
             { mid },
             { sign: "wbi" },
+        ).then(res => {
+            return res.data;
+        });
+    }
+
+    /**
+     * 查看用户信息
+     * @param mid 用户id
+     * @returns
+     */
+    async info(mid: number): Promise<UserInfo> {
+        return Request.get(
+            "https://api.bilibili.com/x/space/wbi/acc/info",
+            { mid },
+            { credential: this.credential, sign: "wbi" },
         ).then(res => {
             return res.data;
         });
@@ -99,7 +115,7 @@ export class User {
      * @param keyword 搜索关键字 / 用户id
      * @returns 返回用户mid，如果不存在则返回0
      */
-    static async exist(keyword: string | number): Promise<0 | number> {
+    async exist(keyword: string | number): Promise<0 | number> {
         const checkInfo = async (keyword: number) => {
             return this.info(keyword)
                 .then(res => {
@@ -114,7 +130,7 @@ export class User {
         else {
             if (/^\d+$/.test(keyword)) return checkInfo(parseInt(keyword));
             else {
-                const res = await this.searchUser(keyword);
+                const res = await User.searchUser(keyword);
                 return res.length > 0 ? res[0].mid : 0;
             }
         }

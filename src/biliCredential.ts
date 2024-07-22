@@ -30,7 +30,8 @@ export class BiliCredential {
         extra?: {
             uid?: number, refreshToken?: string,
             devId?: string, timestamp?: number, dedeUserIdCkMd5?: string
-        }) {
+        },
+    ) {
         this.cookie = { SESSDATA, bili_jct: biliJct };
         this.csfr = biliJct;
         this.uid = extra?.uid ? extra?.uid : 0;
@@ -39,7 +40,7 @@ export class BiliCredential {
         this.dedeUserIdCkMd5 = extra?.dedeUserIdCkMd5 ? extra?.dedeUserIdCkMd5 : "";
         this.valid = false;
 
-        const tmp = [];
+        const tmp: String[] = [];
         for (const [k, v] of Object.entries(this.cookie)) {
             tmp.push(`${k}=${v}`);
         }
@@ -69,12 +70,14 @@ export class BiliCredential {
 
     async loadInfo(): Promise<UserInfo> {
         if (this.uid && this.valid) {
-            const info = await User.info(this.uid);
+            const user = new User(this);
+            const info = await user.info(this.uid);
             this.info = info;
         }
         else {
             await this.validCredit();
-            const info = await User.info(this.uid);
+            const user = new User(this);
+            const info = await user.info(this.uid);
             this.info = info;
         };
         return this.info;
