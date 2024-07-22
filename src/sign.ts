@@ -1,6 +1,8 @@
 import * as crypto from "crypto";
 import { Request } from "./request";
 
+import { murmurX64Hash128 } from "@fingerprintjs/fingerprintjs";
+
 export function devIdVerify(devId: string): boolean {
     return /[\dA-F]{8}-[\dA-F]{4}-4[\dA-F]{3}-[\dA-F]{4}-[\dA-F]{12}/.test(devId);
 }
@@ -94,4 +96,8 @@ export async function wbiSign(params: object) {
     const subKey = webKeys.sub_key;
     const query = encWbi(params, imgKey, subKey);
     return query;
+}
+
+export function genBuvidFp(input: string): string {
+    return murmurX64Hash128(input, 31);
 }
