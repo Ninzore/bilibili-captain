@@ -80,6 +80,7 @@ export class User {
             "https://api.vc.bilibili.com/account/v1/user/infos",
             { uids: uids.join(",") },
         ).then(res => {
+            if (!res || !res.data || res.data.length === 0) return [];
             return res.data;
         });
     }
@@ -115,11 +116,11 @@ export class User {
      * @param keyword 搜索关键字 / 用户id
      * @returns 返回用户mid，如果不存在则返回0
      */
-    async exist(keyword: string | number): Promise<0 | number> {
+    static async exist(keyword: string | number): Promise<0 | number> {
         const checkInfo = async (keyword: number) => {
-            return this.info(keyword)
+            return this.batchInfos([keyword])
                 .then(res => {
-                    return res.mid;
+                    return res.length > 0 ? parseInt(res[0].mid) : 0;
                 })
                 .catch(() => {
                     return 0;
