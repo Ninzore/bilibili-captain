@@ -9,22 +9,26 @@ import {
     SignResp, StartLiveResp, StopLiveResp,
     StreamAddrResp, UploadCoverResp,
 } from "./types/live";
-import { LiveRoom } from "./types/user";
 
 /**
  * 直播间相关
  */
 export class Live {
     private credential: BiliCredential;
-    liveroom!: LiveRoom;
+    liveUserInfo!: LiveUserInfoResp;
+    liveRoomInfo!: RoomInfoResp;
 
-    constructor(credential: BiliCredential) {
-        if (!credential.uid || !credential.info.live_room) {
-            throw new Error("未能获取自己uid，需要先使用 BiliCredential.loadInfo");
-        }
-
+    constructor(credential: BiliCredential, liveUserInfo?: LiveUserInfoResp, liveRoomInfo?: RoomInfoResp) {
         this.credential = credential;
-        this.liveroom = credential.info.live_room;
+
+        if (liveUserInfo) this.liveUserInfo = liveUserInfo;
+        if (liveRoomInfo) this.liveRoomInfo = liveRoomInfo;
+    }
+
+    async init() {
+        const userInfo = await this.credential.loadInfo();
+        this.liveUserInfo = await this.selfInfo();
+        this.liveRoomInfo = await Live.getRoomInfo(userInfo.live_room.roomid);
     }
 
     /**
@@ -59,7 +63,7 @@ export class Live {
         return Request.post(
             "https://api.live.bilibili.com/room/v1/Room/startLive",
             {
-                room_id: this.liveroom.roomid,
+                room_id: this.liveRoomInfo.room_id,
                 platform: "pc",
                 area_v2: area,
                 csrf_token: this.credential.csfr,
@@ -78,7 +82,7 @@ export class Live {
         return Request.post(
             "https://api.live.bilibili.com/room/v1/Room/stopLive",
             {
-                room_id: this.liveroom.roomid,
+                room_id: this.liveRoomInfo.room_id,
                 platform: "pc",
                 csrf_token: this.credential.csfr,
                 csrf: this.credential.csfr,
@@ -112,7 +116,7 @@ export class Live {
         return Request.post(
             "https://api.live.bilibili.com/xlive/app-blink/v1/index/updateRoomNews",
             {
-                room_id: this.liveroom.roomid,
+                room_id: this.liveRoomInfo.room_id,
                 uid: this.credential.uid,
                 content,
                 csrf_token: this.credential.csfr,
@@ -216,7 +220,7 @@ export class Live {
     async getNewCover(): Promise<GetCoverListResp> {
         return Request.get(
             "https://api.live.bilibili.com/room/v1/Cover/new_get_list",
-            { room_id: this.liveroom.roomid },
+            { room_id: this.liveRoomInfo.room_id },
             this.credential,
         ).then(res => res.data[0]);
     }
@@ -229,7 +233,7 @@ export class Live {
         return Request.get(
             "https://api.live.bilibili.com/room/v1/Cover/get_list",
             {
-                room_id: this.liveroom.roomid,
+                room_id: this.liveRoomInfo.room_id,
                 type: "all_cover",
             },
             this.credential,
@@ -258,7 +262,7 @@ export class Live {
                 ? "https://api.live.bilibili.com/room/v1/Cover/new_replace_cover" // 普通直播
                 : "https://api.live.bilibili.com/room/v1/Cover/replace", //  颜值区
             {
-                room_id: this.liveroom.roomid,
+                room_id: this.liveRoomInfo.room_id,
                 url: imgUrl,
                 pic_id: picId,
                 type: coverType,
