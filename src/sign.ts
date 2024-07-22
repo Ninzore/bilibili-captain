@@ -20,6 +20,16 @@ export function genBLsid(): string {
     });
 }
 
+export function genUuid(): string {
+    const char = "x";
+    const p1 = `${char.repeat(8)}-${char.repeat(4)}-${char.repeat(4)}-${char.repeat(4)}-${char.repeat(12)}`.replace(/[x]/g, () => {
+        const randomInt = 16 * Math.random() | 0;
+        return ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"][randomInt];
+    });
+    const p2 = Date.now().toString().substring(0, 7);
+    return `${p1}${p2}infoc`;
+}
+
 // 为请求参数进行 wbi 签名
 function encWbi(params: any, imgKey: string, subKey: string) {
     const mixinKeyEncTab = [
