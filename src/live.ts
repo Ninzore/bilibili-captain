@@ -9,11 +9,13 @@ import {
     SignResp, StartLiveResp, StopLiveResp,
     StreamAddrResp, UploadCoverResp,
 } from "./types/live";
+import { AreaIds } from "./types/areaList";
 
 /**
  * 直播间相关
  */
 export class Live {
+    static areaIds = AreaIds;
     private credential: BiliCredential;
     liveUserInfo!: LiveUserInfoResp;
     liveRoomInfo!: RoomInfoResp;
