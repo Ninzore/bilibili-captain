@@ -12,6 +12,12 @@ export class Request {
     static referer = "https://www.bilibili.com";
     static dmCoverImgStr = Request.encodeDmStr("ANGLE (NVIDIA, NVIDIA GeForce RTX 4090 (0x00002684) Direct3D11 vs_5_0 ps_5_0, D3D11)Google Inc. (NVIDIA)");
     static dmImgStr = Request.encodeDmStr("WebGL 1.0 (OpenGL ES 2.0 Chromium)");
+    static axios = axios.create({
+        headers: {
+            "User-Agent": this.userAgent,
+            "Referer": this.referer
+        }
+    });
 
     static async request(url: string, method: Method, params: Object = {},
         data?: string | Object | FormData, credential?: BiliCredential): Promise<any> {

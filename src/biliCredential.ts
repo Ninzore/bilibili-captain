@@ -13,6 +13,7 @@ export class BiliCredential {
         buvid_fp: string;
         buvid3: string;
         buvid4: string;
+        b_lsid: string;
         b_nut: string; // 时间戳
         _uuid: string;
     };
@@ -52,6 +53,7 @@ export class BiliCredential {
             buvid_fp: "",
             buvid3: "",
             buvid4: "",
+            b_lsid: "",
             b_nut: this.timestamp.toString(),
             _uuid: genUuid(),
         };

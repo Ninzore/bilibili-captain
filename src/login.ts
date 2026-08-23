@@ -25,12 +25,15 @@ export class Login {
      * @param qrcodeKey 扫码登录秘钥
      * @returns
      */
-    private static async _getQRloginInfo(qrcodeKey: string): Promise<GetLoginInfoResp> {
-        return Request.get(
+    private static async _getQRloginInfo(qrcodeKey: string): Promise<{
+        data: GetLoginInfoResp;
+        headers: string[];
+    }> {
+        return Request.axios.get(
             "https://passport.bilibili.com/x/passport-login/web/qrcode/poll",
-            { qrcode_key: qrcodeKey },
+            { params: { qrcode_key: qrcodeKey } },
         )
-            .then(res => res.data)
+            .then(res => ({ data: res.data.data, headers: res.headers["set-cookie"] }))
             .catch(err => {
                 if (err.data) return err;
                 else throw err;
@@ -66,21 +69,26 @@ export class Login {
         const countDown = 60;
 
         const polling = setTimeout(async (countDown) => {
-            const res = await this._getQRloginInfo(qrcodeKey);
-            const { code, message, refresh_token: refreshToken } = res;
-
-            if (code === 0 && "url" in res) {
+            const { data: data, headers: cookie } = await this._getQRloginInfo(qrcodeKey);
+            const { code, message, refresh_token: refreshToken } = data;
+            
+            if (code === 0 && "url" in data) {
                 clearInterval(polling);
-                const params = new URL(res.url).searchParams;
-                const sessdata = params.get("SESSDATA");
-                const biliJct = params.get("bili_jct");
-                const uid = parseInt(params.get("DedeUserID") as string);
-                const dedeUserIdCkMd5 = params.get("DedeUserID__ckMd5") as string;
-                if (!sessdata) throw new Error("未取得SESSDATA");
-                if (!biliJct) throw new Error("未取得bili_jct");
+                const reqCookie = {
+                    "SESSDATA": "",
+                    "bili_jct": "",
+                    "DedeUserID": "",
+                    "DedeUserID__ckMd5": ""
+                }
+                for (let item of cookie) {
+                    item = item.split(";")[0];
+                    const [cookieItemName, cookieItemValue] = item.split("=");
+                    reqCookie[cookieItemName as unknown as keyof typeof reqCookie] = cookieItemValue;
+                }
+                const uid = parseInt(reqCookie.DedeUserID);
                 console.log(uid, "已完成扫码登录");
-                callback(new BiliCredential(sessdata, biliJct,
-                    { uid, refreshToken, dedeUserIdCkMd5, timestamp: res.timestamp }));
+                callback(new BiliCredential(reqCookie.SESSDATA, reqCookie.bili_jct,
+                    { uid, refreshToken, dedeUserIdCkMd5: reqCookie.DedeUserID__ckMd5, timestamp: data.timestamp }));
             }
             else if (code === 86038) throw new Error("二维码已失效");
             else {
